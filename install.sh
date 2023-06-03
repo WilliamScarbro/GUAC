@@ -40,8 +40,8 @@ PYTHON=`which python3.8`
 ### GUAC
 ## link
 #popd
-#rm -p ~/.local/bin/guac
-#ln -s $PWD/src/guac ~/.local/bin/guac
+rm ~/.local/bin/guac
+ln -s $PWD/src/guac ~/.local/bin/guac
 #
 # set guac shebang to $PYTHON
 

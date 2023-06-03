@@ -258,6 +258,7 @@ def parse_arguments():
     # init
     init_parser=subparsers.add_parser("init",help="initializes new assignment directory, e.g. writes guac.yaml")
     init_parser.set_defaults(func=init)
+    add_force(init_parser)
 
     # grade
     grade_parser=subparsers.add_parser("grade",help="extracts grades from results of run")
@@ -352,15 +353,14 @@ def list_tests(args):
     weights_file,to_execute=parse_recipe_yaml(recipe_file)
     _list_tests(to_execute,run_config)
      
-    
-# --assignment
-# --master
+# --force
 def init(args):
     print("Initializing 'guac.yaml'")
+    force=args.force
     cwd=os.getcwd()
     if os.path.isfile("guac.yaml"):
         print("File 'guac.yaml' already exists")
-        confirm("replace 'guac.yaml'")
+        confirm("replace 'guac.yaml'",force)
         
     user_home=os.environ['HOME']
     config_vars={"ASSIGNMENT":os.path.basename(cwd),
@@ -381,7 +381,7 @@ def init(args):
         
     write_output('guac.yaml',guac_config)
 
-    confirm("to add template files")
+    confirm("to add template files",force)
     
     dirs=["data","lib","recipes","bin"]
     for d in dirs:
