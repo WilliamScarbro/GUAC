@@ -7,12 +7,12 @@ Guac is a system for grading assignments. Guac provides several modules which ca
 
 ```python3.8```
 
-Execute ```./install.sh```
+Execute ```./install.sh```<br>
 This will
 * download Avocado in ~/avocado
 * configures avocado (installs plugins, configures sequential task execution)
-* modify to use correct python version (avocado requires >=3.8 CS machines default to 3.6)
-* link guac interface in ~/.local/bin/guac
+* modify Avocado to use correct Python version (Avocado requires >=3.8 CS machines default to 3.6)
+* link guac interface to ~/.local/bin/guac
 * install necessary python libraries
 
 ## Usage
@@ -26,12 +26,12 @@ This will
 Tests are defined by defining a series of tasks. Each task consists of a source module (which will be run by Avocado) and a series of config files.
 The source modules in guac are intended to be conprehensive, therefore creating a test harness for a new assignment should only require writing a series of config files.
 * Tasks are defined in a RECIPE_FILE (see ./docs/RECIPE_FILE and ./examples)
-* The varaibles required in a config file is dependent on the module being used (see ./docs/CONFIG_FILES)
+* The set of varaibles required in a config file is dependent on the module being used (see ./docs/CONFIG_FILES)
 
 ### Assign Test Weights
 ```guac list --recipe RECIPE_FILE```
 * Before grading assignments we must assign weights to each one of the tests associated with a particular recipe. 
-* After running ```guac list``` copy the list of tests into a new file and assign weights to each test (see ./docs/TEST_WEIGHTS)
+* After running ```guac list``` copy the list of tests into a new file and assign weights to each test (see ./docs/WEIGHTS_FILE)
 * *Hint: you may find the command ```sed "s/$/: 1/g" -i WEIGHTS_FILE``` useful as a starting point*
 
 ### Generate Master Results
@@ -46,7 +46,7 @@ The source modules in guac are intended to be conprehensive, therefore creating 
 * Student submissions can be graded one at a time (by specifying --name) or in sets (by specifying --these)
 * See ./docs/STUDENTS_FILE for details
 * Results are written to ASSIGNMENT_HOME/.scores/RECIPE/NAME/{TASK_NAMES,NAME.grade}
-* verbose flag will change log level
+* The --verbose flag will change log level
 
 ### Manual Grading
 #### Inspect 
