@@ -68,13 +68,25 @@ def safe_read(file_path):
     return out
 
 
+
 def parse_for_regex(text,regex):
+    regex_replaced=regex.replace('\\\\','\\')
+    match = re.search(regex_replaced, text)
+    if match:
+        return match.group(0)
+    raise ValueError(f"Cannot match '{regex_replaced}' against: '{text}'")
+
+def parse_for_regex_group(text,regex):
     regex_replaced=regex.replace('\\\\','\\')
     match = re.search(regex_replaced, text)
     if match:
         return match.group(1)
     raise ValueError(f"Cannot match '{regex_replaced}' against: '{text}'")
 
+def parse_for_regex_set(text,regex):
+    regex_replaced=regex.replace('\\\\','\\')
+    matched=re.findall(regex_replaced,text)
+    return "\n".join(matched)
 
 def write_output(file_name,output):
     #self.log.debug(f"writing to {file_name}")

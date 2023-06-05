@@ -26,7 +26,7 @@ class Timer:
                 output_files+=[self.collector.output_file_path(master,context=copy_context)]
 
         output_data=[Util.safe_read(fname) for fname in output_files]
-        times=[float(Util.parse_for_regex(data,self.time_re)) for data in output_data]
+        times=[float(Util.parse_for_regex_group(data,self.time_re)) for data in output_data]
 
         return self._summerize(times)
 

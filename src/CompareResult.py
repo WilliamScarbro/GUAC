@@ -21,6 +21,8 @@ class CompareResult(Util.GuacTest):
                 
         executable=self._safe_param("EXEC")
         arg=self._safe_param("ARG")
+        result_re=self.params.get("RESULT_RE",default=None)
+        match_method=self.params.get("MATCH_METHOD",default="Default")
         
         collector=Collection.Collector(self)
 
@@ -35,14 +37,20 @@ class CompareResult(Util.GuacTest):
         student_out=collector.get_output()
         master_out=collector.get_output(master=True)
 
-        result_re=self.params.get("RESULT_RE",default=None)
         if not result_re:
             student_result=student_out
             master_result=master_out
         else:
-            student_result=Util.parse_for_regex(student_out,result_re)
-            master_result=Util.parse_for_regex(master_out,result_re)
-
+            match_method_map = {"Default":Util.parse_for_regex,
+                                "Group":Util.parse_for_regex_group,
+                                "Set":Util.parse_for_regex_set}
+            if match_method in match_method_map:
+                match_func=match_method_map[match_method]
+                student_result=match_func(student_out,result_re)
+                master_result=match_func(master_out,result_re)
+            else:
+                raise ValueError(f"MATCH_METHOD '{match_method}' is not in known methods: {list(match_method_map.keys)}")
+            
         self.log.debug(f"Result: master {master_result} student {student_result}")
 
         self._write_whiteboard_yaml({"Master_Result":master_result})
