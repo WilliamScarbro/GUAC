@@ -6,7 +6,7 @@ The parameters in ```guac.conf``` can be initialized using the command ```guac i
 
 ## Parameters
 
-* HOME: Assignment home directory
+* HOME: Assignment home directory (this is not the same as ($HOME the user's home)
   * default: CWD
 * ASSIGNMENT: Assignment name
   * default: directory name of CWD

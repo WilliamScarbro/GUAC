@@ -21,20 +21,20 @@ This will:
 ### Initialize Assignment Grading Directory
 * Create a new directory; named the same as the assignment (not necessary).
 * execute ```guac init```
-* See ./docs/GUAC_CONFIG.md for details of configuration variables.
+* See [docs/GUAC_CONFIG.md](./docs/GUAC_CONFIG.md) for details of configuration variables.
 
 ### Define Tests
 Tests are defined by a series of tasks. Each task consists of a source module (which will be run by Avocado) and a series of config files.
 The source modules in guac are intended to be generic, therefore creating a test harness for a new assignment should only require writing a series of config files.
 
-* Tasks are defined in a RECIPE_FILE (see ./docs/RECIPE_FILE.md and ./examples)
-* The set of variables required in a config file is dependent on the module being used (see ./docs/AVOCADO_MODULES.md)
+* Tasks are defined in a RECIPE_FILE (see [docs/RECIPE_FILE.md](./docs/RECIPE_FILE.md) and ./examples)
+* The set of variables required in a config file is dependent on the module being used (see [docs/AVOCADO_MODULES.md](./docs/AVOCADO_MODULES.md))
 
 ### Assign Test Weights
 ```guac list --recipe RECIPE_FILE```
 
 * Before grading assignments we must assign weights to each one of the tests associated with a particular recipe. 
-* After running ```guac list``` copy the list of tests into a new file and assign weights to each test (see ./docs/WEIGHTS_FILE.md).
+* After running ```guac list``` copy the list of tests to a new file and assign weights to each test (see [docs/WEIGHTS_FILE.md](./docs/WEIGHTS_FILE.md)).
 * *Hint: you may find the command ```sed "s/$/: 1/g" -i WEIGHTS_FILE``` useful as a starting point.*
 
 ### Generate Master Results
@@ -49,7 +49,7 @@ The source modules in guac are intended to be generic, therefore creating a test
 ```guac run --these STUDENT_FILE --recipe RECIPE_FILE```
 
 * Student submissions can be graded one at a time (by specifying -\-name) or in sets (by specifying -\-these).
-* See ./docs/STUDENT_FILE.md for details.
+* See [docs/STUDENT_FILE.md](./docs/STUDENT_FILE.md) for details.
 * Results are written to ASSIGNMENT_HOME/.scores/RECIPE/NAME/{TASK_NAMES,NAME.grade}
 * The -\-verbose flag will change log level.
 
