@@ -37,6 +37,8 @@ class CompareResult(Util.GuacTest):
         student_out=collector.get_output()
         master_out=collector.get_output(master=True)
 
+        self.log.debug(master_out)
+        
         if not result_re:
             student_result=student_out
             master_result=master_out
@@ -50,7 +52,10 @@ class CompareResult(Util.GuacTest):
                 master_result=match_func(master_out,result_re)
             else:
                 raise ValueError(f"MATCH_METHOD '{match_method}' is not in known methods: {list(match_method_map.keys)}")
-            
+
+        if master_out=='':
+            raise Exception(f"Master matched result is empty output '{master_out}' result_re '{result_re}'")
+        
         self.log.debug(f"Result: master {master_result} student {student_result}")
 
         self._write_whiteboard_yaml({"Master_Result":master_result})

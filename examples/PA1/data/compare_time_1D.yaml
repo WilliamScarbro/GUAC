@@ -1,0 +1,2 @@
+TIME_RE: "time : (\\\\d+\\\\.\\\\d+) sec"
+TIME_EPSILON: 1.5

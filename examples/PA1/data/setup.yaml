@@ -1,0 +1,10 @@
+TAR_CONTENTS:
+  - mat_vec.c
+  - stencil_1D.c
+  - makefile
+  - stencil_2D.c
+  - report.pdf
+
+LIB_CONTENTS:
+  - timer.h
+  - timer.c

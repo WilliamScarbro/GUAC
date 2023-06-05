@@ -35,7 +35,7 @@ class CompareTime(Util.GuacTest):
         
         description=collector.describe()
         description["Description"]="Comparing time with master"
-        description["EPSILON"]=str(epsilon)
+        description["EPSILON"]=epsilon
 
         self._write_whiteboard_yaml(description)
 
@@ -45,7 +45,7 @@ class CompareTime(Util.GuacTest):
         master_time=timer.get_time(master=True)
         
         maximum = master_time*epsilon
-        self._write_whiteboard_yaml({"Maximum_Time":maximum})
+        self._write_whiteboard_yaml({"Maximum_Time":float(maximum)})
 
         if student_time>maximum:
             self._write_whiteboard_yaml({"Your_Time":student})

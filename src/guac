@@ -90,7 +90,7 @@ def avocado_run_wrapper(script,script_config,run_config,verbose=0):
             print(color(Fore.RED,out))
             print(color(Fore.RED,error))
         if code!=2: # avocado does not produce logs in this case
-            logs=parse_for_regex(out,"JOB LOG\s+:\s+(.*)")
+            logs=parse_for_regex_group(out,"JOB LOG\s+:\s+(.*)")
             print(color(Fore.BLUE,f"Logs: {logs}"))
     if code==2:
         print(color(Fore.RED,error))

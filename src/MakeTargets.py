@@ -20,7 +20,7 @@ class MakeTargets(Util.GuacTest):
         make_targets = self._safe_param("MAKE_TARGETS")
 
         desc={"Description":"Checking 'make clean' removes targets",
-              "MAKE_TARGETS":Util.list_to_yaml_str(make_targets) }
+              "MAKE_TARGETS":make_targets }
         self._write_whiteboard_yaml(desc)
         
         build.make(srcdir,extra_args="clean")

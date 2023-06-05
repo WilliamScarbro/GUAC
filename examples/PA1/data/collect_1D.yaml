@@ -1,0 +1,5 @@
+# collect stencil_1D
+EXEC: stencil_1D
+ARG: 2000 30000
+
+

@@ -1,0 +1,5 @@
+# collect stencil_2d_SEQ
+EXEC: stencil_2D_SEQ
+ARG: 350 350 
+
+

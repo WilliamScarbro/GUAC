@@ -1,0 +1,5 @@
+# collect stencil_1D_SEQ
+EXEC: stencil_1D_SEQ
+ARG: 2000 30000
+
+

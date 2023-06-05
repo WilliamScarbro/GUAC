@@ -1,0 +1,2 @@
+TIME_RE: "Time : (\\\\d+\\\\.\\\\d+) sec"
+SPEEDUP_EPSILON: .75

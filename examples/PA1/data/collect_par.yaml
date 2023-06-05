@@ -1,0 +1,23 @@
+# PAR Collection
+
+SAMPLES: 3
+
+RUNNER: OMP
+
+nthreads: !mux
+  one:
+    THREADS: 1
+  two:
+    THREADS: 2
+  three:
+    THREADS: 3
+  four:
+    THREADS: 4
+  five:
+    THREADS: 5
+  six:
+    THREADS: 6
+  seven:
+    THREADS: 7
+  eight:
+    THREADS: 8

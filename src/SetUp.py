@@ -85,7 +85,7 @@ class SetUp(Util.GuacTest):
         tar_contents=self._safe_param("TAR_CONTENTS")
 
         desc={"Description":"Checking Tarball Contents",
-              "TAR_CONTENTS":Util.list_to_yaml_str(tar_contents)}
+              "TAR_CONTENTS":tar_contents}
         self._write_whiteboard_yaml(desc)
 
         assignment = self._safe_param("ASSIGNMENT")
@@ -107,7 +107,7 @@ class SetUp(Util.GuacTest):
         
         lib_contents=self.params.get("LIB_CONTENTS",default=[])
         desc={"Description":"Copying into working directory",
-              "LIB_CONTENTS":Util.list_to_yaml_str(lib_contents)}
+              "LIB_CONTENTS":lib_contents}
         self._write_whiteboard_yaml(desc)
         
         home = self._safe_param("HOME")

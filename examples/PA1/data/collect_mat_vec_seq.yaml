@@ -1,0 +1,4 @@
+# collect mat_vec_SEQ
+EXEC: mat_vec_SEQ
+ARG: 2500 1000
+

@@ -1,0 +1,8 @@
+MAKE_TARGETS:
+  - stencil_1D_SEQ 
+  - stencil_2D_SEQ  
+  - mat_vec_SEQ 
+  - stencil_1D 
+  - stencil_2D 
+  - mat_vec
+

@@ -1,0 +1,4 @@
+# collect stencil_1D
+EXEC: stencil_2D
+ARG: 350 350 
+
