@@ -27,7 +27,7 @@ This will:
 Tests are defined by a series of tasks. Each task consists of a source module (which will be run by Avocado) and a series of config files.
 The source modules in guac are intended to be generic, therefore creating a test harness for a new assignment should only require writing a series of config files.
 
-* Tasks are defined in a RECIPE_FILE (see [docs/RECIPE_FILE.md](./docs/RECIPE_FILE.md) and ./examples)
+* Tasks are defined in a RECIPE_FILE (see [docs/RECIPE_FILE.md](./docs/RECIPE_FILE.md))
 * The set of variables required in a config file is dependent on the module being used (see [docs/AVOCADO_MODULES.md](./docs/AVOCADO_MODULES.md))
 
 ### Assign Test Weights
