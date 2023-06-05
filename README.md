@@ -55,9 +55,10 @@ The source modules in guac are intended to be generic, therefore creating a test
 
 ### Manual Grading
 #### Inspect 
+```guac inspect --name NAME```
 ```guac inspect --name NAME --file FILE```
 
-When manual grading is required, use inspect to cat a file from a student's submission.
+When manual grading is required, use inspect to list the contents of a tarball (when --file is not specified) or to cat a file from a student's submission.
 
 #### Extract
 ```guac extract --these STUDENTS_FILE --file FILE --dest DIST_DIR```

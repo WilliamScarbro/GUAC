@@ -276,7 +276,7 @@ def parse_arguments():
     inspect_parser=subparsers.add_parser("inspect",help="inspects file from student's submission")
     inspect_parser.set_defaults(func=inspect)
     add_name(inspect_parser)
-    add_file(inspect_parser)
+    add_file(inspect_parser,required=False)
     
     # extract
     extract_parser=subparsers.add_parser("extract",help="extracts file from these students and collects in dest directory (default ./bin)")
@@ -428,10 +428,14 @@ def inspect(args):
     name=args.name
     file_name=args.file
 
+    
     guac_config=GuacConfig()
     tar_loc=tar_location(guac_config.sub_home,guac_config.assignment,name)
 
-    print(read_file_from_tar(tar_loc,file_name))
+    if file_name is None:
+        print(list_tar_contents(tar_loc))
+    else:
+        print(read_file_from_tar(tar_loc,file_name))
 
 # --file
 # --these

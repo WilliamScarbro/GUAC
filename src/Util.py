@@ -171,6 +171,16 @@ def get_score_file(recipe_file,name):
     return f".scores/{recipe_name}/{name}/{name}.grade"
 
 
+def list_tar_contents(file_path):
+    contents=""
+    try:
+        with tarfile.open(file_path, 'r') as tar:
+            for member in tar.getmembers():
+                contents+=member.name+"\n"
+    except tarfile.TarError:
+        print(f"Error: Failed to open or read the tar file '{file_path}'.")
+    return contents
+
 def read_file_from_tar(tar_file_path, file_name):
     """
     Read a file from inside a tar file.
