@@ -4,9 +4,9 @@ Avocado modules use parameters defined by config files. The set of parameters re
 
 Config files are referenced in RECIPE_FILES through the CONFIG variable (see docs/RECIPE_FILE).
 
-Many modules require all of the parameters from another set. Rather than repeating parameters we use the notation \<param-set\> to refrence previously defined parameter sets.
+Many modules require all of the parameters from another set. Rather than repeating parameters we use the notation \<param-set\> to reference previously defined parameter sets.
 
-When multiple configuration files are listed for a task in the RECIPE_FILE their contentents are concatenated. To see the resulting module configuration inspect the file argument to ```--mux-yaml``` in the logs of ```guac generate```.
+When multiple configuration files are listed for a task in the RECIPE_FILE their contents are concatenated. To see the resulting module configuration inspect the file argument to ```--mux-yaml``` in the logs of ```guac generate```.
 
 ## Environment Parameters
 
@@ -39,7 +39,7 @@ Some parameters are automatically included in the configuration for all Avocado 
 * LIB_CONTENTS: [String]
  
 #### MakeTargets:
-**Descirption**
+**Description**
 
 * Checks ```make clean``` removes MAKE_TARGETS
 * Checks ```make``` creates MAKE_TARGETS
@@ -57,10 +57,10 @@ Some parameters are automatically included in the configuration for all Avocado 
 * When MASTER is True, also writes output to .master_results/RECIPE_NAME/{VARIABLES}
 * When SAMPLES is greater than 1, program is executed multiple times
 * For timing, CENTRAL_MEASURE determines how the final time is calculated
-* THREADS is required when using a parallel runnner, and specifies the degree of parallelism
-* The **Python** runnner executes a python program e.g. ```python EXEC ARGS```
-* The **OMP** runnner executes an OMP program by setting the environment variable OMP_NUM_THREADS to THREADS
-* The **MPI** runnner executes an MPI program e.g. ```mpirun -np THREADS EXEC ARG```
+* THREADS is required when using a parallel runner, and specifies the degree of parallelism
+* The **Python** runner executes a python program e.g. ```python EXEC ARG```
+* The **OMP** runner executes an OMP program by setting the environment variable OMP_NUM_THREADS to THREADS
+* The **MPI** runner executes an MPI program e.g. ```mpirun -np THREADS EXEC ARG```
 
 
 **Parameters**
