@@ -66,7 +66,7 @@ class SetUp(Util.GuacTest):
 
         # not the best, should find a better solution, or a better standard
         assignment_dir=os.path.join(work,self._safe_param("ASSIGNMENT"))
-        if os.isdir(assignment_dir):
+        if os.path.isdir(assignment_dir):
             for el in os.listdir(assignment_dir):
                 shutil.move(os.path.join(assignment_dir,el),os.path.join(work,el))
                 
