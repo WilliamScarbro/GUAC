@@ -21,27 +21,27 @@ This will:
 ### Initialize Assignment Grading Directory
 * Create a new directory; named the same as the assignment (not necessary).
 * execute ```guac init```
-* See ./docs/GUAC_CONFIG for details of configuration variables.
+* See ./docs/GUAC_CONFIG.md for details of configuration variables.
 
 ### Define Tests
 Tests are defined by a series of tasks. Each task consists of a source module (which will be run by Avocado) and a series of config files.
 The source modules in guac are intended to be generic, therefore creating a test harness for a new assignment should only require writing a series of config files.
 
-* Tasks are defined in a RECIPE_FILE (see ./docs/RECIPE_FILE and ./examples)
-* The set of variables required in a config file is dependent on the module being used (see ./docs/CONFIG_FILES)
+* Tasks are defined in a RECIPE_FILE (see ./docs/RECIPE_FILE.md and ./examples)
+* The set of variables required in a config file is dependent on the module being used (see ./docs/AVOCADO_MODULES.md)
 
 ### Assign Test Weights
 ```guac list --recipe RECIPE_FILE```
 
 * Before grading assignments we must assign weights to each one of the tests associated with a particular recipe. 
-* After running ```guac list``` copy the list of tests into a new file and assign weights to each test (see ./docs/WEIGHTS_FILE).
+* After running ```guac list``` copy the list of tests into a new file and assign weights to each test (see ./docs/WEIGHTS_FILE.md).
 * *Hint: you may find the command ```sed "s/$/: 1/g" -i WEIGHTS_FILE``` useful as a starting point.*
 
 ### Generate Master Results
 ```guac generate --recipe RECIPE_NAME```
 
 * This step executes the recipe for the submission associated with MASTER.
-* The results are stored in ASSIGNMENT_HOME/.master_results.
+* The results are stored in ASSIGNMENT_HOME/.master_results
 * The .master_results directory has the general structure RECIPE_NAME/{VARIABLES} (the variables used depends on the condiguration of the collector module).
 
 ### Automatic Grading
@@ -49,8 +49,8 @@ The source modules in guac are intended to be generic, therefore creating a test
 ```guac run --these STUDENT_FILE --recipe RECIPE_FILE```
 
 * Student submissions can be graded one at a time (by specifying -\-name) or in sets (by specifying -\-these).
-* See ./docs/STUDENT_FILE for details.
-* Results are written to ASSIGNMENT_HOME/.scores/RECIPE/NAME/{TASK_NAMES,NAME.grade}.
+* See ./docs/STUDENT_FILE.md for details.
+* Results are written to ASSIGNMENT_HOME/.scores/RECIPE/NAME/{TASK_NAMES,NAME.grade}
 * The -\-verbose flag will change log level.
 
 ### Manual Grading

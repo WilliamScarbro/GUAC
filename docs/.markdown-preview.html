@@ -13,7 +13,7 @@
          var socket = new WebSocket("ws://localhost:7379");
          socket.onopen = function() {
              console.log("Connection established.");
-             socket.send("MDPM-Register-UUID: e03498f7-dbb9-463c-8d6b-829ef15e6710");
+             socket.send("MDPM-Register-UUID: fcb02ddb-fc7b-44ac-a06e-49eeed34e5f4");
          };
          socket.onclose = function(event) {
              if (event.wasClean) {

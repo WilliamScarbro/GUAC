@@ -3,4 +3,4 @@ __pycache__/
 .config
 .master_results
 .scores
-.markdown_preview.html
+.markdown-preview.html
