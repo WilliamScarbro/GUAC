@@ -1,6 +1,6 @@
 # guac
 
-Guac is a system for grading assignments. G uac provides several modules which can be easily configured using YAML files. This method is made possible by the [Avocado](https://github.com/avocado-framework/avocado) test framework. In addition, guac provides several tools to aid grading such as manually editing task scores, and exporting class results.
+Guac is a system for grading assignments. Guac provides several modules which can be easily configured using YAML files. This method is made possible by the [Avocado](https://github.com/avocado-framework/avocado) test framework. In addition, guac provides several tools to aid grading such as manually editing task scores, and exporting class results.
 
 ## Installation
 **Prerequisites**
