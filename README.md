@@ -42,7 +42,7 @@ The source modules in guac are intended to be generic, therefore creating a test
 
 * This step executes the recipe for the submission associated with MASTER.
 * The results are stored in ASSIGNMENT_HOME/.master_results
-* The .master_results directory has the general structure RECIPE_NAME/{VARIABLES} (the variables used depends on the condiguration of the collector module).
+* The .master_results directory has the general structure RECIPE_NAME/{VARIABLES} (the variables used depends on the configuration of the collector module).
 
 ### Automatic Grading
 ```guac run --name NAME --recipe RECIPE_FILE```<br>
