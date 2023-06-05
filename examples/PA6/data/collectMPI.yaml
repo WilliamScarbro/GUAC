@@ -1,0 +1,25 @@
+# collectMPI
+
+targets: !mux
+  jacMPI:
+    EXEC: jacMPI
+    COLLECTOR: CollectorMPI
+    procs: !mux
+      one:
+        PROCS: 1
+      two:
+        PROCS: 2
+      three:
+        PROCS: 3
+      four:
+        PROCS: 4
+      five:
+        PROCS: 5
+        
+args: !mux
+   small:
+     ARG: 10
+   medium:
+     ARG: 100
+   large:
+     ARG: 1000

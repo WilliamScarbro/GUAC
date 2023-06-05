@@ -1,0 +1,22 @@
+WEIGHTS: data/full_weights.yaml
+
+TaskList:
+  - Task:
+      Name: SetUp
+      Source: SetUp.py
+      Config: data/setup.yaml
+
+  - Task:
+      Name: Collect
+      Source: Collect.py
+      Config: data/full_collect.yaml
+
+  - Task:
+      Name: Compare
+      Source: CompareResult.py
+      Config:
+        - data/full_collect.yaml
+        - data/compare_result.yaml
+       
+  
+    

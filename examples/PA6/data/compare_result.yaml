@@ -1,0 +1,3 @@
+# Compare Results
+
+RESULT_RE: "(first, mid, last: \\\\d+\\\\.\\\\d+( \\\\d+\\\\.\\\\d+){2})"

@@ -1,0 +1,25 @@
+# collectOMP
+
+targets: !mux
+  jacOMP:
+    EXEC: jacOMP
+    COLLECTOR: CollectorOMP
+    threads: !mux
+      one:
+        THREADS: 1
+      two:
+        THREADS: 2
+      three:
+        THREADS: 3
+      four:
+        THREADS: 4
+      five:
+        THREADS: 5
+        
+args: !mux
+   small:
+     ARG: 10
+   medium:
+     ARG: 100
+   large:
+     ARG: 1000

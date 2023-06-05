@@ -1,0 +1,40 @@
+
+
+# collect
+
+targets: !mux
+  jac:
+    EXEC: jac
+    THREADS: 1
+  jacOMP:
+    EXEC: jacOMP
+    threads: !mux
+      one:
+        THREADS: 1
+      two:
+        THREADS: 2
+      three:
+        THREADS: 3
+      four:
+        THREADS: 4
+      five:
+        THREADS: 5
+        
+args: !mux
+   small:
+     ARG: 10
+   medium:
+     ARG: 100
+   large:
+     ARG: 1000
+
+# compare
+
+RESULT_RE: "\\\\d+\\\\.\\\\d+( \\\\d+\\\\.\\\\d+){2}"
+
+TIME_RE: "time : (\\\\d+\\\\.\\\\d+) sec"
+
+compare: !mux
+  easy:
+    TIME_EPSILON: 1.5
+    SPEEDUP_EPSILON: .75

@@ -72,7 +72,6 @@ def parse_score_file(file_path):
     score_data=Util.safe_read(file_path)
     score_data_split=score_data.split("---")
 
-    # this is the only one we can guaruntee is valid yaml 
     summery=yaml.safe_load(score_data_split[0])
 
     score=Util.Score.fromString(safe_get_var(summery,"Score"))

@@ -1,0 +1,10 @@
+# Setup
+
+TAR_CONTENTS:
+  - merge_sort.py
+  - report.pdf
+
+LIB_CONTENTS:
+  - nums
+  - more_nums
+

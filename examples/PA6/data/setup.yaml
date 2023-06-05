@@ -1,0 +1,15 @@
+
+TAR_CONTENTS:
+  - Makefile
+  - jac.c
+  - jacOMP.c
+  - jacMPI.c
+  - diamond.c
+  - diamond.h
+  - diamondMPI.c
+  - report.pdf
+  
+LIB_CONTENTS:
+  - hosts2
+  - timer.c
+  - timer.h

@@ -86,7 +86,8 @@ class Collector:
 def get_runner(runner_name,test):
     runner_map={"DEFAULT":Runner,
                 "MPI":MPIRunner,
-                "OMP":OMPRunner}
+                "OMP":OMPRunner,
+                "Python":PythonRunner}
     if not runner_name in runner_map:
         raise ValueError(f"Runner Name: '{runner_name}' is not in list of known runners: {list(runner_map.keys())}")
     return runner_map[runner_name](test)
@@ -111,6 +112,14 @@ class Runner:
 
     def describe(self):
         return {"COMMAND":self.command()}
+
+class PythonRunner(Runner):
+    def __init__(self,test):
+        Runner.__init__(self,test)
+        #self.version=test.get_param
+
+    def command(self):
+        return f"python {self.executable} {self.args}"
     
 # abstract
 class PARRunner(Runner):

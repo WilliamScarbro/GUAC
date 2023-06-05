@@ -21,7 +21,6 @@ class CompareResult(Util.GuacTest):
                 
         executable=self._safe_param("EXEC")
         arg=self._safe_param("ARG")
-        result_re=self._safe_param("RESULT_RE")
         
         collector=Collection.Collector(self)
 
@@ -35,9 +34,14 @@ class CompareResult(Util.GuacTest):
         
         student_out=collector.get_output()
         master_out=collector.get_output(master=True)
-        
-        student_result=Util.parse_for_regex(student_out,result_re)
-        master_result=Util.parse_for_regex(master_out,result_re)
+
+        result_re=self.params.get("RESULT_RE",default=None)
+        if not result_re:
+            student_result=student_out
+            master_result=master_out
+        else:
+            student_result=Util.parse_for_regex(student_out,result_re)
+            master_result=Util.parse_for_regex(master_out,result_re)
 
         self.log.debug(f"Result: master {master_result} student {student_result}")
 

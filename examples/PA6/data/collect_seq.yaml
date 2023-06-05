@@ -1,0 +1,12 @@
+targets: !mux
+  jac:
+    EXEC: jac
+
+args: !mux
+  small:
+    ARG: 10
+  medium:
+    ARG: 100
+  large:
+    ARG: 1000 
+ 

@@ -1,0 +1,6 @@
+  /ssh:perch:/s/chopin/k/grad/wscarbro/guac/docs:
+  total used in directory 12 available 485 GiB
+  drwx------ 2 wscarbro grad 4096 Jun  4 12:13 .
+  drwx------ 6 wscarbro grad 4096 Jun  4 12:12 ..
+  -rw------- 1 wscarbro grad  840 Jun  3 13:22 CONFIG_FILES.md
+  -rw------- 1 wscarbro grad    0 Jun  4 12:13 WEIGHTS_FILE.md

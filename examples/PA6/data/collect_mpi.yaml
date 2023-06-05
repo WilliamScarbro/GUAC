@@ -1,0 +1,26 @@
+RUNNER: MPI
+SAMPLES: 3
+CENTRAL_MEASURE: MEAN
+DISCARD_OUTLIERS: "True"
+
+targets: !mux
+  jacMPI:
+    EXEC: jacMPI
+    threads: !mux
+      one:
+        THREADS: 1
+      two:
+        THREADS: 2
+      four:
+        THREADS: 4
+
+args: !mux
+  small:
+    ARG: 64 100 10
+  medium:
+    ARG: 128 100 10
+  #large:
+  #  ARG: 1024 100 10
+
+
+# total runs: 3*3*5=45

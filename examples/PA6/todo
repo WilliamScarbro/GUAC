@@ -1,0 +1,8 @@
+TODO
+#- test cuda
+- test server
+- documentation
+- task dependencies
+- success vs fail vs skip error codes
+- shortcut actions (review code, summerize grade, adjust grade, summerize class, get-reports)
+- integrate with checkin

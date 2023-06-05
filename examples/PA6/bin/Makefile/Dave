@@ -1,0 +1,25 @@
+OBJS = timer.o
+H_FILE = timer.h
+
+EXEC = jac jacOMP #jacMPI #diamondMPI
+
+all: $(EXEC)
+
+jac: jac.c $(OBJS) $(H_FILE)
+	gcc -O3 -o $@ jac.c $(OBJS) $(MATHFLAG)
+
+jacOMP: jacOMP.c $(OBJS) $(H_FILE)
+	gcc -O3 -o $@ jacOMP.c -fopenmp $(OBJS) $(MATHFLAG)
+
+jacMPI: jacMPI.c $(OBJS) $(H_FILE)
+	mpicc -O3 -o $@ jacMPI.c $(OBJS) $(MATHFLAG)
+
+diamondMPI: diamondMPI.c diamond.c diamond.h
+	mpicc -O3 -o $@ $^ $(MATHFLAG)
+
+
+clean:
+	rm -f $(EXEC) *.o
+
+tar:
+	tar cvf PA5.tar Makefile jac.c jacOMP.c jacMPI.c diamond.c diamond.h diamondMPI.c report.pdf

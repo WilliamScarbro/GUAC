@@ -1,0 +1,5 @@
+MAKE_TARGETS:
+  - jac
+  - jacMPI
+  - jacOMP
+  #- diamondMPI

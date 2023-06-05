@@ -1,0 +1,9 @@
+# Compare Speedup
+
+TIME_RE: "time : (\\\\d+\\\\.\\\\d+) sec"
+
+compare: !mux
+  easy:
+    #TIME_EPSILON: 1.5
+    SPEEDUP_EPSILON: .75
+

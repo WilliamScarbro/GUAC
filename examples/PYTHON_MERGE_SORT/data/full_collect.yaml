@@ -1,0 +1,10 @@
+# Full Collect
+
+EXEC: merge_sort.py
+files: !mux
+  small:
+    ARG: nums
+  big:
+    ARG: more_nums
+    
+RUNNER: Python
