@@ -172,16 +172,25 @@ def get_work_dir(home):
 
 # {sub_home}/{assignment}/{student}/{assignment}.tar
 def tar_location(sub_home,assignment,student):
-    
-    tar_loc = sub_home+"/"+assignment+"/"+student+"/"+assignment+".tar"
-    #self.log.debug(f"Tar location: {tar_loc}") 
-    return tar_loc
+
+    tar_dir=os.path.join(os.path.join(sub_home,assignment),student)
+    on_time=os.path.join(tar_dir,assignment+".tar")
+    if os.path.isfile(on_time):
+        return on_time
+
+    late=os.path.join(tar_dir,f"LATE_{assignment}.tar")
+    if os.path.isfile(late):
+        return late
+
+    raise Exception(f"No submission found for {student}")
 
 def get_score_file(recipe_file,name):
     recipe_name=os.path.basename(recipe_file).split('.')[0]
 
     return f".scores/{recipe_name}/{name}/{name}.grade"
 
+def get_server_file(home):
+    return os.path.join(home,".server")
 
 def list_tar_contents(file_path):
     contents=""
@@ -231,9 +240,9 @@ def confirm(action,force):
             exit()
         print("Please enter 'Y' or 'N'")
 
-def summerize_task_results(task_scores,score):
+def summerize_task_results(assignment,task_scores,score):
     task_results = yaml.dump({"Task_Results":task_scores},sort_keys=False)
-    return ('\n# Grading Details\n'
-            f"\n{task_results}\n"
-            f'\nScore: {score}\n\n')
-    
+    return (f'Grade: {score}\n'
+            '\n# Grading Details\n'
+            f"\n{task_results}\n")
+ 

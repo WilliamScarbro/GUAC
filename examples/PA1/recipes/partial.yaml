@@ -1,0 +1,71 @@
+WEIGHTS: data/full_weights.yaml
+
+TaskList:
+  - Task:
+      Name: Setup
+      Source: SetUp.py
+      Config: data/setup.yaml
+  
+  - Task:
+      Name: MakeTargets
+      Source: MakeTargets.py
+      Config: data/make_targets.yaml
+ 
+  # Collect SEQ
+  #
+  - Task:
+      Name: Collect Stencil 1D SEQ
+      Source: Collect.py
+      Config: 
+        - data/collect_1D_seq.yaml
+        - data/collect_seq.yaml
+
+  # Collect PAR
+  #
+  - Task:
+      Name: Collect Stencil 1D
+      Source: Collect.py
+      Config: 
+        - data/collect_1D.yaml
+        - data/collect_par.yaml
+
+  # Compare Result SEQ
+  #
+  - Task:
+      Name: Compare Stencil 1D Result SEQ
+      Source: CompareResult.py
+      Config:
+        - data/collect_1D_seq.yaml
+        - data/collect_seq.yaml
+        - data/compare_result_1D.yaml
+         
+ 
+ 
+  # Compare Result PAR
+  - Task:
+      Name: Compare Stencil 1D Result PAR
+      Source: CompareResult.py
+      Config:
+        - data/collect_1D.yaml
+        - data/collect_par.yaml
+        - data/compare_result_1D.yaml
+         
+
+  # Compare Time
+  - Task:
+      Name: Compare Time 1D PAR
+      Source: CompareTime.py
+      Config:
+        - data/collect_1D.yaml
+        - data/collect_par.yaml
+        - data/compare_time_1D.yaml
+
+  # Compare Speedup
+  - Task:
+      Name: Compare Speedup 1D
+      Source: CompareSpeedup.py
+      Config:
+        - data/collect_1D.yaml
+        - data/collect_par.yaml
+        - data/compare_speedup_1D.yaml
+

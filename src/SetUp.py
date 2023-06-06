@@ -43,7 +43,12 @@ class SetUp(Util.GuacTest):
         tar_loc = self._tar_location()
         #
         if not os.path.isfile(tar_loc):
-            self.cancel(f"Missing {tar_loc}")
+            self.cancel(f"Missing {os.path.basename(tar_loc)}")
+            
+        tar_desc={"Message":f"Grading {os.path.basename(tar_loc)}",
+              "Contents":Util.list_tar_contents(tar_loc)}
+        self._write_whiteboard_yaml(tar_desc)
+        
     #
 
     def test_extract_tar(self):
@@ -85,7 +90,7 @@ class SetUp(Util.GuacTest):
         tar_contents=self._safe_param("TAR_CONTENTS")
 
         desc={"Description":"Checking Tarball Contents",
-              "TAR_CONTENTS":tar_contents}
+              "Required Contents":tar_contents}
         self._write_whiteboard_yaml(desc)
 
         assignment = self._safe_param("ASSIGNMENT")

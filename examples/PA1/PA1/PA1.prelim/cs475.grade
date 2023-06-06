@@ -1,0 +1,248 @@
+
+# Grading Details
+
+Task_Results:
+  Setup: 5 / 5
+  MakeTargets: 2 / 2
+  Collect Stencil 1D SEQ: 1 / 1
+  Collect Stencil 1D: 4 / 4
+  Compare Stencil 1D Result SEQ: 1 / 1
+  Compare Stencil 1D Result PAR: 4 / 4
+  Compare Time 1D PAR: 4 / 4
+  Compare Speedup 1D: 4 / 4
+
+
+Score: 25 / 25
+
+---
+Description: Clearing working directory
+Status: PASS
+Score: 1 / 1
+---
+Description: Testing Tarball exists
+Message: Grading PA1.tar
+Contents: 'PA1
+
+  PA1/mat_vec.c
+
+  PA1/stencil_1D.c
+
+  PA1/makefile
+
+  PA1/stencil_2D.c
+
+  PA1/timer.h
+
+  PA1/timer.c
+
+  PA1/report.pdf
+
+  '
+Status: PASS
+Score: 1 / 1
+---
+Description: Extracting Tarball to working directory
+Status: PASS
+Score: 1 / 1
+---
+Description: Checking Tarball Contents
+Required Contents:
+- mat_vec.c
+- stencil_1D.c
+- makefile
+- stencil_2D.c
+- report.pdf
+Status: PASS
+Score: 1 / 1
+---
+Description: Copying into working directory
+LIB_CONTENTS:
+- timer.h
+- timer.c
+Status: PASS
+Score: 1 / 1
+---
+Description: Checking 'make clean' removes targets
+MAKE_TARGETS:
+- stencil_1D_SEQ
+- stencil_2D_SEQ
+- mat_vec_SEQ
+- stencil_1D
+- stencil_2D
+- mat_vec
+Status: PASS
+Score: 1 / 1
+---
+Description: Checking 'make' produces targets
+MAKE_TARGETS:
+- stencil_1D_SEQ
+- stencil_2D_SEQ
+- mat_vec_SEQ
+- stencil_1D
+- stencil_2D
+- mat_vec
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D_SEQ 2000 30000
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D_SEQ 2000 30000
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+EPSILON: 1.5
+Maximum_Time: 0.10980000000000001
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+EPSILON: 1.5
+Maximum_Time: 0.0861375
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+EPSILON: 1.5
+Maximum_Time: 0.072767
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+EPSILON: 1.5
+Maximum_Time: 0.0834625
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1

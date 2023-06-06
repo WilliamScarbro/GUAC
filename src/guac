@@ -11,209 +11,11 @@ from colorama import Fore,Style
 
 from ParseYaml import *
 from Util import *
+from Logger import Logger
 
-###
-# Interface with Avocado
-
-class AvocadoTest:
-    def __init__(self,name,status,description="",fail_message="",points=0):
-        self.full_name=name
-        self.name=self.full_name[:-5] # ignore last 4 digits (hash of config params)
-        self.status=status
-        self.description=description
-        self.fail_message=fail_message
-        self.points=points
-        self.score=-1
-
-        
-    @staticmethod
-    def parse_json_dict(json_data):
-        return AvocadoTest(json_data["id"],json_data["status"],description=json_data["whiteboard"],fail_message=json_data["fail_reason"])
-    
-    def __str__(self):
-        return f"{self.name} : {self.status} : {self.fail_message} : {self.score} / {self.points}"
-
-    def get_score(self):
-        if self.status == "PASS":
-            self.score= self.points
-        else:
-            self.score= 0
-        return self.score
-
-    def verbose(self):
-        res=self.description
-        
-        if self.status == "PASS":
-            res+="Status: PASS\n"
-        else:
-            res+=f"Status: {self.status}\n"
-            res+=f"Message: {self.fail_message}\n"
-
-        res+=f"Score: {self.score} / {self.points}\n"
-        return res
-                
-
-# avocado_run_wrapper :: String -> [String] -> RunConfig -> [AvocadoTest]
-def avocado_run_wrapper(script,script_config,run_config,verbose=0):
-
-    # parse_result_json :: [AvocadoTest]
-    def parse_result_json():
-        avo_home = run_config.guac_config.avo_home
-        with open(avo_home+"/job-results/latest/results.json","r") as f:
-            data = json.load(f)
-        return [AvocadoTest.parse_json_dict(test) for test in data["tests"]]
-
-    
-    # aggregate config files and RunConfig
-    run_config_yaml=run_config.get_run_config_yaml()
-    config_dir=run_config.guac_config.home+"/.config/"
-    #shutil.rmtree(config_dir,ignore_errors=True)
-    os.makedirs(config_dir,exist_ok=True)
-    new_config=config_dir+'-'.join(script_config).replace("/","_")
-    try:
-        os.remove(new_config)
-    except OSError:
-        pass
-    
-    for config in script_config:
-        print(color(Fore.BLUE,f"Including config: {config}"))
-        yaml_file_append(new_config,config)
-    yaml_file_append(new_config,run_config_yaml,src_is_data=True)
-    
-    # execute avocado script
-    cmd = f"avocado run {run_config.guac_config.guac_home}/src/{script} --mux-yaml {new_config}  "
-    print(color(Fore.BLUE,f"Executing: {cmd}"))
-    #try:
-    code,out,error = run_command(run_config.guac_config.home,cmd)
-    if verbose==2:
-        if code==1:
-            print(color(Fore.RED,out))
-            print(color(Fore.RED,error))
-        if code!=2: # avocado does not produce logs in this case
-            logs=parse_for_regex_group(out,"JOB LOG\s+:\s+(.*)")
-            print(color(Fore.BLUE,f"Logs: {logs}"))
-    if code==2:
-        print(color(Fore.RED,error))
-    if code!=0 and run_config.is_listing=="True":
-        raise Exception("Task failed")
-        
-    #except Exception as e:
-        
-    #    print(f"EXCEPTION: {e}")
-
-        
-    return parse_result_json()
-
-###
-# Transform guac actions to avocado
-
-class GuacConfig:
-    def __init__(self):
-        self.assignment,self.home,self.avo_home,self.sub_home,self.guac_home,self.master = parse_guac_yaml("guac.yaml")
-
-class RunConfig:
-    def __init__(self,guac_config,recipe,student=None,is_listing="False"):
-        self.guac_config=guac_config
-        self.recipe=recipe
-        self.is_master=student is None
-        if student is None:
-            self.student=self.guac_config.master
-            self.is_master="True"
-        else:
-            self.student=student
-            self.is_master="False"
-        self.is_listing=is_listing
-    
-    def get_run_config_yaml(self):
-        return yaml.dump({"ASSIGNMENT":self.guac_config.assignment,
-                          "HOME":self.guac_config.home,
-                          "SUBMISSION_HOME":self.guac_config.sub_home,
-                          "RECIPE":self.recipe,
-                          "STUDENT":self.student,
-                          "MASTER":self.is_master,
-                          "LIST":self.is_listing})
-        
-# execute :: Task -> RunConfig -> AvocadoTest
-def execute(task,run_config,verbose=False):
-    source=safe_get_var(task,"Source")
-    config=safe_get_var(task,"Config")
-    if not isinstance(config,list):
-        config=[config]
-        
-    task_results=avocado_run_wrapper(source,config,run_config,verbose)
-    return task_results
-    
-# list_tests :: [Task] -> RunConfig -> String
-def _list_tests(to_execute,run_config):
-    results=[]
-    for task in to_execute:
-        results+=execute(task,run_config,verbose=True)
-    print(color(Fore.GREEN,">>>>>> Begin Test List <<<<<<<"))
-    for result in results:
-        print(result.name)
-    
-
-# run_tasks :: String -> String -> [Task] -> RunConfig -> (Int,Int)
-def run_tasks(recipe_file,weights_file,to_execute,run_config,verbose=0):
-
-    # clear .work
-    work_dir=get_work_dir(run_config.guac_config.home)
-    shutil.rmtree(work_dir,ignore_errors=True)
-    os.makedirs(work_dir)
-    
-    recipe_name=os.path.basename(recipe_file).split('.')[0] # remove directories and file type
-    
-    score_dir=run_config.guac_config.home+"/.scores"
-    os.makedirs(score_dir,exist_ok=True)
-
-    recipe_dir=os.path.join(score_dir,recipe_name)
-    os.makedirs(recipe_dir,exist_ok=True)
-
-    student_dir=os.path.join(recipe_dir,run_config.student)
-    shutil.rmtree(student_dir,ignore_errors=True)
-    os.makedirs(student_dir)
-    
-    total=0
-    score=0
-    all_results=""
-    task_counter=0
-    task_scores={}
-    for task in to_execute:
-        task_name_given=safe_get_var(task,'Name').replace(" ","_")
-        task_name=f"{task_counter}-{task_name_given}"
-        if verbose>=1:
-            print(color(Fore.GREEN,f"Starting task: {task_name}"))
-        task_results=execute(task,run_config,verbose)
-        test_names=[test.name for test in task_results]
-        weights=parse_weights(weights_file,test_names)
-
-        task_points=0
-        task_score=0
-        for test in task_results:
-            test.points=int(safe_get_var(weights,test.name))
-            task_points+=test.points
-            task_score+=test.get_score()
-        task_scores[safe_get_var(task,'Name')]=f"{task_score} / {task_points}"
-        total+=task_points
-        score+=task_score
-            
-        result=""
-        for test in task_results:
-            result+="---\n"
-            result+=test.verbose()
-        write_output(os.path.join(student_dir,f"{task_name}"),result)
-        all_results+=result
-        task_counter+=1
-        
-    # save result
-
-    final_score=Score(score,total)
-    all_results = summerize_task_results(task_scores,final_score)+all_results
-    
-    write_output(os.path.join(student_dir,f"{run_config.student}.grade"),all_results)
-    
-    return score,total
-        
+from GuacConfig import *        
+from GuacInternal import *
+from GuacServer import *
 
 ###
 # Executable interface
@@ -301,15 +103,22 @@ def parse_arguments():
     add_recipe(export_parser)
     add_these(export_parser,required=False)
 
+    # server
+    server_parser=subparsers.add_parser("server",help="launches test server")
+    server_parser.set_defaults(func=server)
+    add_recipe(server_parser)
+    
     return parser,parser.parse_args()
 
 # --name | --these
 # --recipe
 # --verbose {0,1,2}
 def run(args):
+
     recipe_file=args.recipe
     guac_config=GuacConfig()
     weights_file,to_execute=parse_recipe_yaml(recipe_file)
+    weights=read_yaml_file(weights_file)
     
     to_run=[]
     if args.name:
@@ -321,13 +130,9 @@ def run(args):
         to_run=parse_students_yaml(args.these)
      
     #print(f"grading: {to_run}")
-    for stdID in to_run:
-        print(f"Grading {stdID}")
-        run_config=RunConfig(guac_config,recipe_file,student=stdID)
-        score,total=run_tasks(recipe_file,weights_file,to_execute,run_config,verbose=args.verbose)
-        print(f"{stdID} Grade: {score}/{total}")
+    for student in to_run:
+        run_student(student,recipe_file,guac_config,weights,to_execute,verbose=args.verbose)
         
-    
 # --recipe
 def generate(args):
     recipe_file=args.recipe
@@ -337,6 +142,7 @@ def generate(args):
     
     print(f"Generating master results from: {master}")
     weights_file,to_execute=parse_recipe_yaml(recipe_file)
+    weights=read_yaml_file(weights_file)
     
     master_dir=get_master_dir(run_config.guac_config.home,recipe_file)
     shutil.rmtree(master_dir,ignore_errors=True)
@@ -346,7 +152,7 @@ def generate(args):
     # os.uname().nodename >> master_dir/host_name, then we can error if run is on different machine than generate
     
      # generate should pass all tests so we always want to know if it fails
-    score,total = run_tasks(recipe_file,weights_file,to_execute,run_config,verbose=2)
+    score,total = run_tasks(recipe_file,weights,to_execute,run_config,verbose=2)
     if score!=total:
         raise Exception(f"Error: generate failed {total-score} tests")
 
@@ -356,7 +162,7 @@ def list_tests(args):
     recipe_file=args.recipe
     run_config=RunConfig(GuacConfig(),recipe_file,is_listing="True")
     weights_file,to_execute=parse_recipe_yaml(recipe_file)
-    _list_tests(to_execute,run_config)
+    list_tests_internal(to_execute,run_config)
      
 # --force
 def init(args):
@@ -482,6 +288,8 @@ def update(args):
     score=args.score
     force=args.force
 
+    guac_config=GuacConfig()
+    
     score_file=get_score_file(recipe_file,name)
     
     # string , string, dict , score
@@ -492,7 +300,7 @@ def update(args):
     try:
         old_score_str=safe_get_var(task_results,task)
     except Exception as e:
-        raise ValueError("Summery does not contain task {task}")
+        raise ValueError(f"Summery does not contain task {task}")
         #confim("add {task} to student's grade")
         #total=int(input("input task total: "))
         #old_score=Score(0,total)
@@ -504,7 +312,7 @@ def update(args):
 
     task_results[task]=str(new_score)
 
-    new_summery=summerize_task_results(task_results,new_final_score)
+    new_summery=summerize_task_results(guac_config.assignment,task_results,new_final_score)
 
     print(f"New summery:\n---\n{new_summery}---")
 
@@ -524,9 +332,31 @@ def export(args):
 
     for stdID,score in std_scores:
         print(f"{stdID},{score}")
-        
+
+# --recipe
+def server(args):
+    recipe=args.recipe
+    guac_config=GuacConfig()
+
+    server=Server(recipe,guac_config)
+
+    server.serve()
+
+    
+    
 def main():
     #shutil.rmtree("/tmp/guac",ignore_errors=True)
+
+    # if server is running in current directory, guac will not run
+    guac_config=GuacConfig()
+
+    server_file=get_server_file(guac_config.home)
+    if os.path.isfile(server_file):
+        contents=safe_read(server_file)
+        print("Error: server is running")
+        print(contents)
+        print(f"If you are sure the server is not running, remove {server_file}")
+        exit(1)
     
     parser,args = parse_arguments()
 

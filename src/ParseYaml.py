@@ -60,13 +60,13 @@ def parse_students_yaml(file_path):
             raise ValueError(f"Error while parsing YAML file: {e}")
 
 # parse_weights :: String -> [String] -> {String:String}
-def parse_weights(file_path,test_names):
-    data = read_yaml_file(file_path)
+def check_weights(weights,test_names):
+    #data = read_yaml_file(file_path)
     for name in test_names:
-        val=data.get(name)
+        val=weights.get(name)
         if val is None:
-            raise ValueError(f"Test '{name}' missing from weights file '{file_path}'.")
-    return data
+            raise ValueError(f"Test '{name}' missing from weights file.")
+
 
 def parse_score_file(file_path):
     score_data=Util.safe_read(file_path)
@@ -74,7 +74,7 @@ def parse_score_file(file_path):
 
     summery=yaml.safe_load(score_data_split[0])
 
-    score=Util.Score.fromString(safe_get_var(summery,"Score"))
+    score=Util.Score.fromString(safe_get_var(summery,"Grade"))
 
     return score_data,score_data_split[0],summery,score
     
