@@ -16,6 +16,7 @@ def safe_get_var(dt,var):
 def read_yaml_file(file_path):
     with open(file_path, 'r') as file:
         data = yaml.safe_load(file)
+        file.close()
     return data
 
 # parse_guac_yaml :: String -> (String,String,String)
@@ -76,5 +77,7 @@ def parse_score_file(file_path):
 
     score=Util.Score.fromString(safe_get_var(summery,"Grade"))
 
-    return score_data,score_data_split[0],summery,score
+    late = "LATE" in summery
+    
+    return score_data,score_data_split[0],summery,score,late
     

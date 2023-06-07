@@ -22,3 +22,8 @@ class Logger:
 
     def close(self):
         self.pbar.close()
+        #self.pbar.clear(nolock=False)
+        #print("closing pbar")
+        #self.pbar.refresh(nolock=False)
+        
+        

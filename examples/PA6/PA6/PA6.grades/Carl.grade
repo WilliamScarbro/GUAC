@@ -1,0 +1,129 @@
+Grade: 16 / 16
+Task_Scores:
+  0-Setup: 5 / 5
+  1-Test_Makefile: 2 / 2
+  2-Collect_SEQ: 3 / 3
+  3-Compare_SEQ_Results: 3 / 3
+  4-Compare_SEQ_Time: 3 / 3
+Assignment: PA6
+Task_Results:
+- Task_Name: 0-Setup
+  Score: 5 / 5
+  Test_Results:
+  - Description: Clearing working directory
+    Status: PASS
+    Score: 1 / 1
+  - Description: Testing Tarball exists
+    Message: Grading PA6.tar
+    Contents: 'Makefile
+
+      jac.c
+
+      diamond.c
+
+      diamond.h
+
+      diamondMPI.c
+
+      report.pdf
+
+      jacMPI.c
+
+      jacOMP.c
+
+      '
+    Status: PASS
+    Score: 1 / 1
+  - Description: Extracting Tarball to working directory
+    Status: PASS
+    Score: 1 / 1
+  - Description: Checking Tarball Contents
+    Required Contents:
+    - Makefile
+    - jac.c
+    - jacOMP.c
+    - jacMPI.c
+    - diamond.c
+    - diamond.h
+    - diamondMPI.c
+    - report.pdf
+    Status: PASS
+    Score: 1 / 1
+  - Description: Copying into working directory
+    LIB_CONTENTS:
+    - hosts2
+    - timer.c
+    - timer.h
+    Status: PASS
+    Score: 1 / 1
+- Task_Name: 1-Test_Makefile
+  Score: 2 / 2
+  Test_Results:
+  - Description: Checking 'make clean' removes targets
+    MAKE_TARGETS:
+    - jac
+    - jacMPI
+    - jacOMP
+    Status: PASS
+    Score: 1 / 1
+  - Description: Checking 'make' produces targets
+    MAKE_TARGETS:
+    - jac
+    - jacMPI
+    - jacOMP
+    Status: PASS
+    Score: 1 / 1
+- Task_Name: 2-Collect_SEQ
+  Score: 3 / 3
+  Test_Results:
+  - Description: Collecting Results
+    COMMAND: ./jac 10
+    Status: PASS
+    Score: 1 / 1
+  - Description: Collecting Results
+    COMMAND: ./jac 100
+    Status: PASS
+    Score: 1 / 1
+  - Description: Collecting Results
+    COMMAND: ./jac 1000
+    Status: PASS
+    Score: 1 / 1
+- Task_Name: 3-Compare_SEQ_Results
+  Score: 3 / 3
+  Test_Results:
+  - Description: Comparing results with master
+    COMMAND: ./jac 10
+    Master_Result: 'first, mid, last: 0.000000 4.000000 9.000000'
+    Status: PASS
+    Score: 1 / 1
+  - Description: Comparing results with master
+    COMMAND: ./jac 100
+    Master_Result: 'first, mid, last: 0.000000 49.000000 99.000000'
+    Status: PASS
+    Score: 1 / 1
+  - Description: Comparing results with master
+    COMMAND: ./jac 1000
+    Master_Result: 'first, mid, last: 0.000000 499.000000 999.000000'
+    Status: PASS
+    Score: 1 / 1
+- Task_Name: 4-Compare_SEQ_Time
+  Score: 3 / 3
+  Test_Results:
+  - Description: Comparing time with master
+    COMMAND: ./jac 10
+    EPSILON: 1.5
+    Maximum_Time: 3.3e-05
+    Status: PASS
+    Score: 1 / 1
+  - Description: Comparing time with master
+    COMMAND: ./jac 100
+    EPSILON: 1.5
+    Maximum_Time: 0.000339
+    Status: PASS
+    Score: 1 / 1
+  - Description: Comparing time with master
+    COMMAND: ./jac 1000
+    EPSILON: 1.5
+    Maximum_Time: 0.003177
+    Status: PASS
+    Score: 1 / 1

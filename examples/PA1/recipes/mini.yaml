@@ -1,0 +1,13 @@
+WEIGHTS: data/full_weights.yaml
+
+TaskList:
+  - Task:
+      Name: Setup
+      Source: SetUp.py
+      Config: data/setup.yaml
+  
+  - Task:
+      Name: MakeTargets
+      Source: MakeTargets.py
+      Config: data/make_targets.yaml
+ 

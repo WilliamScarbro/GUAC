@@ -127,6 +127,55 @@ def list_tests_internal(to_execute,run_config):
         print(result.name)
     
 
+class GradeResults:
+    # Score, {}, Bool
+    def __init__(self,assignment,grade,task_scores,task_results,late):
+        self.assignment=assignment
+        self.grade=grade
+        self.task_scores=task_scores
+        self.task_results=task_results # results of individual tests
+        self.late=late
+
+    
+    def dump(self,verbose=0):
+        if verbose==0:
+            res=f"Grade: {self.grade}"
+            if self.late:
+                res+=" # (Late)"
+            return res
+        
+        summery = {"Grade":str(self.grade),
+                    "Task_Scores":self.task_scores}
+        if self.late:
+            summery["Late"]=True
+        
+        if verbose==1:
+            return yaml.dump(summery,sort_keys=False)
+        if verbose==2:
+            summery["Assignment"]=self.assignment
+            summery["Task_Results"]=self.task_results
+            return yaml.dump(summery,sort_keys=False)
+
+    @staticmethod
+    def from_data(data):
+        grade=safe_get_var(data,"Grade")
+        task_scores=safe_get_var(data,"Task_Scores")
+        assignment=safe_get_var(data,"Assignment")
+        late = "Late" in data # assume if present is true
+        task_results=safe_get_var(data,"Task_Results")
+        return GradeResults(assignment,grade,task_scores,task_results,late)
+
+    @staticmethod
+    def get_task_scores(task_results):
+        return {safe_get_var(task,"Task_Name"):safe_get_var(task,"Score") for task in task_results}
+
+    @staticmethod
+    def get_grade(task_scores):
+        total=Score(0,0)
+        for name,score in task_scores.items():
+            total+=Score.fromString(score)
+        return str(total)
+    
 # run_tasks :: String -> String -> [Task] -> RunConfig -> (Int,Int)
 def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
 
@@ -151,7 +200,7 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
     
     total=0
     score=0
-    all_results=""
+    task_results=[]
     task_counter=0
     task_scores={}
     for task in to_execute:
@@ -160,26 +209,29 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
         
         logger.log(color(Fore.GREEN,f"Starting task: {task_name}"),verbose=1)
 
-        task_results=execute(task,run_config,logger)
-        test_names=[test.name for test in task_results]
+        exec_results=execute(task,run_config,logger) # [AvocadoTest]
+        test_names=[test.name for test in exec_results]
         check_weights(weights,test_names)
 
         task_points=0
         task_score=0
-        for test in task_results:
+        for test in exec_results:
             test.points=int(safe_get_var(weights,test.name))
             task_points+=test.points
             task_score+=test.get_score()
-        task_scores[safe_get_var(task,'Name')]=f"{task_score} / {task_points}"
-        total+=task_points
-        score+=task_score
             
-        result=""
-        for test in task_results:
-            result+="---\n"
-            result+=test.verbose()
-        write_output(os.path.join(student_dir,f"{task_name}"),result)
-        all_results+=result
+
+        
+        parsed_results=[]
+        for test in exec_results:
+            parsed_results.append(yaml.safe_load(test.verbose()))
+
+        task_data={"Task_Name":task_name,
+              "Score":f"{task_score} / {task_points}",
+              "Test_Results":parsed_results}
+                            
+                                 
+        task_results.append(task_data)
         task_counter+=1
 
         logger.update() # updates progress bar
@@ -187,12 +239,21 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
     logger.close()
     # save result
 
-    final_score=Score(score,total)
-    all_results = summerize_task_results(run_config.guac_config.assignment,task_scores,final_score)+all_results
+    assignment = run_config.guac_config.assignment
+    sub_home = run_config.guac_config.sub_home
+    student = run_config.student
     
-    write_output(os.path.join(student_dir,f"{run_config.student}.grade"),all_results)
+    _,late=tar_location(sub_home,assignment,student)
+                        
+    task_scores=GradeResults.get_task_scores(task_results)
+    grade=GradeResults.get_grade(task_scores)
     
-    return score,total
+    grade_results=GradeResults(assignment,grade,task_scores,task_results,late)
+
+    write_output(os.path.join(student_dir,f"{student}.grade"),grade_results.dump(verbose=2))
+
+    return grade_results
+
 
 ## Interface functions
 # included here to avoid circular dependence with Server
@@ -200,8 +261,7 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
 def run_student(student,recipe_file,guac_config,weights,to_execute,verbose=0):
     print(f"Grading {student}")
     run_config=RunConfig(guac_config,recipe_file,student=student)
-    score,total=run_tasks(recipe_file,weights,to_execute,run_config,verbose=verbose)
-    print(f"{student} Grade: {score}/{total}")
+    return run_tasks(recipe_file,weights,to_execute,run_config,verbose=verbose)
 
         
         

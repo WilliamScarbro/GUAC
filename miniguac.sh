@@ -1,5 +1,5 @@
 # shortened guac interface
-
+# source this file to enable
 
 function mguse {
 	echo "mini interface for guac"
@@ -11,6 +11,7 @@ mgvars | list miniguac environment variables
 mgexit | unsets all miniguac functions
 ---
 gini | guac init
+gl | guac list --recipe \$RECIPE
 ggen | guac generate --recipe \$RECIPE
 grn | guac run --name \$NAME --recipe \$RECIPE
 grt | guac run --these \$THESE --recipe \$RECIPE
@@ -50,6 +51,11 @@ function _miniguac_run_command {
 
 function gini {
 	comm="guac init"
+	_miniguac_run_command "$comm"
+}
+
+function gl {
+	comm="guac list --recipe $RECIPE"
 	_miniguac_run_command "$comm"
 }
 

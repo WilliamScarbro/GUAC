@@ -40,7 +40,7 @@ class SetUp(Util.GuacTest):
         
         desc={"Description":"Testing Tarball exists"}
         self._write_whiteboard_yaml(desc)
-        tar_loc = self._tar_location()
+        tar_loc,_ = self._tar_location()
         #
         if not os.path.isfile(tar_loc):
             self.cancel(f"Missing {os.path.basename(tar_loc)}")
@@ -66,7 +66,7 @@ class SetUp(Util.GuacTest):
         self._write_whiteboard_yaml(desc)
         #
         work=Util.get_work_dir(self._safe_param("HOME"))
-        tar_loc=self._tar_location()
+        tar_loc,_=self._tar_location()
         archive.extract(tar_loc,work)
 
         # not the best, should find a better solution, or a better standard

@@ -61,8 +61,9 @@ class Server:
 
     def _run(self,cur):
         # execute tasks
-        run_student(cur,self.recipe_file,self.guac_config,self.weights,self.to_execute)
-
+        grade_result = run_student(cur,self.recipe_file,self.guac_config,self.weights,self.to_execute)
+        print(f'{student} {grade_result.dump(verbose=0)}')
+        
         # copies student grade file to prelim_dir
         score_file=get_score_file(self.recipe_file,cur)
         shutil.copyfile(score_file,os.path.join(self._prelim_dir(),os.path.basename(score_file)))

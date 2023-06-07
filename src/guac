@@ -101,8 +101,14 @@ def parse_arguments():
     export_parser=subparsers.add_parser("export",help="exports grades in CSV format")
     export_parser.set_defaults(func=export)
     add_recipe(export_parser)
-    add_these(export_parser,required=False)
-
+    add_these(export_parser,required=True)
+    add_force(export_parser)
+    export_parser.add_argument("--target",metavar="target_name",required=True,help="Canvas: output grades as CSV, Checkin: copy to grade dir")
+    
+    # clear
+    clear_parser=subparsers.add_parser("clear",help="clears all saved data")
+    clear_parser.set_defaults(func=clear)
+    
     # server
     server_parser=subparsers.add_parser("server",help="launches test server")
     server_parser.set_defaults(func=server)
@@ -131,7 +137,9 @@ def run(args):
      
     #print(f"grading: {to_run}")
     for student in to_run:
-        run_student(student,recipe_file,guac_config,weights,to_execute,verbose=args.verbose)
+        grade_result = run_student(student,recipe_file,guac_config,weights,to_execute,verbose=args.verbose)
+        print(grade_result.dump(verbose=args.verbose))
+        print('---')
         
 # --recipe
 def generate(args):
@@ -152,8 +160,9 @@ def generate(args):
     # os.uname().nodename >> master_dir/host_name, then we can error if run is on different machine than generate
     
      # generate should pass all tests so we always want to know if it fails
-    score,total = run_tasks(recipe_file,weights,to_execute,run_config,verbose=2)
-    if score!=total:
+    grade_results = run_tasks(recipe_file,weights,to_execute,run_config,verbose=2)
+    grade=Score.fromString(grade_results.grade)
+    if grade.score!=grade.total:
         raise Exception(f"Error: generate failed {total-score} tests")
 
 # --recipe
@@ -211,22 +220,15 @@ def grade(args):
     name=args.name
     recipe_file=args.recipe
     verbose=int(args.verbose)
-    _grade(name,recipe_file,verbose)
+    grade_result=_grade(name,recipe_file)
+    print(grade_result.dump(verbose=verbose))
     
-def _grade(name,recipe_file,verbose):
+def _grade(name,recipe_file):
     score_file=get_score_file(recipe_file,name)
 
-    # string , string, dict , score
-    score_data,summery,_,score=parse_score_file(score_file)
+    grade_result=GradeResults.from_data(read_yaml_file(score_file))
     
-    if verbose==0:
-        print(f"{name} Score: {score}")
-    if verbose==1:
-        print(summery)
-    if verbose==2:
-        print(score_data)
-        
-    return score
+    return grade_result
 
 # --name
 # --file
@@ -291,14 +293,12 @@ def update(args):
     guac_config=GuacConfig()
     
     score_file=get_score_file(recipe_file,name)
-    
-    # string , string, dict , score
-    score_data,summery_str,summery_dict,final_score=parse_score_file(score_file)
 
-    task_results=safe_get_var(summery_dict,"Task_Results")
+
+    grade_result=GradeResults.from_data(read_yaml_file(score_file))
 
     try:
-        old_score_str=safe_get_var(task_results,task)
+        old_score_str=safe_get_var(grade_result.task_scores,task)
     except Exception as e:
         raise ValueError(f"Summery does not contain task {task}")
         #confim("add {task} to student's grade")
@@ -308,31 +308,64 @@ def update(args):
     old_score=Score.fromString(old_score_str)
     score_diff=score-old_score.score
     new_score=Score(score,old_score.total)
-    new_final_score=Score(final_score.score+score_diff,final_score.total)
+    #new_final_score=Score(final_score.score+score_diff,final_score.total)
 
-    task_results[task]=str(new_score)
+    # udpate task score
+    grade_result.task_scores[task]=str(new_score)
 
-    new_summery=summerize_task_results(guac_config.assignment,task_results,new_final_score)
+    # update grade
+    grade_result.grade=GradeResults.get_grade(grade_result.task_scores)
 
+    new_summery = grade_result.dump(verbose=1)
+    
     print(f"New summery:\n---\n{new_summery}---")
 
-    confirm("update summery",force)
-    score_data_rest=score_data.split('---')[:1]
-    all_results='---'.join([new_summery]+score_data_rest)
-
-    write_output(score_file,all_results)
+    confirm("update score",force)
+    
+    write_output(score_file,grade_result.dump(verbose=2))
     
 # --recipe
 # --these
+# --target
+# --force
 def export(args):
     these=parse_students_yaml(args.these)
     recipe=args.recipe
+    target=args.target
+    force=args.force
 
-    std_scores=[(stdID,_grade(stdID,recipe,-1).score) for stdID in these]
+    if target=="Canvas":
+        std_scores=[(stdID,Score.fromString(_grade(stdID,recipe).grade).score) for stdID in these]
+        
+        for stdID,score in std_scores:
+            print(f"{stdID},{score}")
+        return
 
-    for stdID,score in std_scores:
-        print(f"{stdID},{score}")
+    if target=="Checkin":
+        guac_config=GuacConfig()
+        checkin_grade_dir=os.path.join(guac_config.sub_home,f"{guac_config.assignment}/{guac_config.assignment}.grades")
 
+        confirm(f"copy grade results to {checkin_grade_dir}",force)
+
+        os.makedirs(checkin_grade_dir,exist_ok=True)
+        for student in these:
+            score_file=get_score_file(recipe,student)
+            shutil.copy(score_file,os.path.join(checkin_grade_dir,os.path.basename(score_file)))
+        return
+
+    print(f"Unknown target '{target}'")
+    exit(1)
+
+def clear(args):
+    dirs=[".master_results",".scores",".work",".config"]
+    confirm(f"clear all data in directories: {', '.join(dirs)}",False)
+
+    guac_config=GuacConfig()
+    for direc in dirs:
+        path=os.path.join(guac_config.home,direc)
+        print(f"clearing {path}")
+        shutil.rmtree(path)
+        
 # --recipe
 def server(args):
     recipe=args.recipe

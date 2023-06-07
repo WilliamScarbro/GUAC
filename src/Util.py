@@ -4,6 +4,7 @@ import subprocess
 import tarfile
 import yaml
 from colorama import Fore,Style
+from pathlib import Path
 
 from avocado.utils import archive, build, process
 from avocado import Test
@@ -175,14 +176,28 @@ def tar_location(sub_home,assignment,student):
 
     tar_dir=os.path.join(os.path.join(sub_home,assignment),student)
     on_time=os.path.join(tar_dir,assignment+".tar")
-    if os.path.isfile(on_time):
-        return on_time
-
     late=os.path.join(tar_dir,f"LATE_{assignment}.tar")
-    if os.path.isfile(late):
-        return late
 
-    raise Exception(f"No submission found for {student}")
+    tars = sorted(Path(tar_dir).iterdir(), key=os.path.getmtime)
+
+    if not tars:
+        raise Exception(f"No submission found for {student}") 
+
+    if "TAR_NAME" in os.environ:
+        tar_name = os.environ['TAR_NAME']
+        tar=None
+        for path in tars:
+            if os.path.basename(path) == tar_name:
+                tar = path
+                break
+        if tar is None:
+            raise Exception(f"Cannot find tar submission named TAR_NAME: 'tar_name'")
+    else:
+        tar = tars[-1]
+        
+    late = os.path.basename(tar) == f"LATE_{assignment}.tar"
+
+    return str(tar),late
 
 def get_score_file(recipe_file,name):
     recipe_name=os.path.basename(recipe_file).split('.')[0]
@@ -240,9 +255,3 @@ def confirm(action,force):
             exit()
         print("Please enter 'Y' or 'N'")
 
-def summerize_task_results(assignment,task_scores,score):
-    task_results = yaml.dump({"Task_Results":task_scores},sort_keys=False)
-    return (f'Grade: {score}\n'
-            '\n# Grading Details\n'
-            f"\n{task_results}\n")
- 
