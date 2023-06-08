@@ -14,10 +14,10 @@ TaskList:
   # MakeTargets
   
   - Task:
-      Name: Test_Makefile
+      Name: MakeTargets
       Source: MakeTargets.py
       Config: data/make_targets.yaml
-
+      Depends: Setup
 
   # Collect
   
@@ -25,6 +25,7 @@ TaskList:
       Name: Collect_SEQ
       Source: Collect.py
       Config: data/collect_seq.yaml
+      Depends: MakeTargets
 
 #  - Task:
 #      Name: Collect_OMP
@@ -45,6 +46,7 @@ TaskList:
       Config:
         - data/collect_seq.yaml
         - data/compare_result.yaml
+      Depends: Collect_SEQ
 
 #  - Task:
 #      Name: Compare_OMP_Results
@@ -69,6 +71,7 @@ TaskList:
       Config:
         - data/collect_seq.yaml
         - data/compare_time.yaml
+      Depends: Compare_SEQ_Results
 
 #  - Task:
 #      Name: Compare_OMP_Time

@@ -1,14 +1,6 @@
 
 
-* allow late assignments (only checks for ASSIGNMENT.tar)
- - done, but does not record that assignment is late
-* allow adding tasks to summary
 
-* added server
-* added miniguac
-
-
-* add server documentation
-* improve server logs (timestamps, write to file) 
-
+* parse yaml on website
+* update documentation
 

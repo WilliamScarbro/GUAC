@@ -89,9 +89,9 @@ def parse_for_regex_set(text,regex):
     matched=re.findall(regex_replaced,text)
     return "\n".join(matched)
 
-def write_output(file_name,output):
+def write_output(file_name,output,append=False):
     #self.log.debug(f"writing to {file_name}")
-    file_name=open(file_name,"w")
+    file_name=open(file_name,"w" if not append else 'a')
     file_name.write(output)
     file_name.close
 
@@ -175,9 +175,13 @@ def get_work_dir(home):
 def tar_location(sub_home,assignment,student):
 
     tar_dir=os.path.join(os.path.join(sub_home,assignment),student)
+    if not os.path.isdir(tar_dir):
+        return None,"Missing"
+    
     on_time=os.path.join(tar_dir,assignment+".tar")
     late=os.path.join(tar_dir,f"LATE_{assignment}.tar")
 
+    
     tars = sorted(Path(tar_dir).iterdir(), key=os.path.getmtime)
 
     if not tars:
@@ -191,18 +195,23 @@ def tar_location(sub_home,assignment,student):
                 tar = path
                 break
         if tar is None:
-            raise Exception(f"Cannot find tar submission named TAR_NAME: 'tar_name'")
+            return None, "Missing" #raise Exception(f"Cannot find tar submission named TAR_NAME: 'tar_name'")
     else:
         tar = tars[-1]
         
-    late = os.path.basename(tar) == f"LATE_{assignment}.tar"
+    status = "Late" if os.path.basename(tar) == f"LATE_{assignment}.tar" else "OnTime"
 
-    return str(tar),late
+    return str(tar),status
 
-def get_score_file(recipe_file,name):
+def get_score_file(home,recipe_file,name):
     recipe_name=os.path.basename(recipe_file).split('.')[0]
 
-    return f".scores/{recipe_name}/{name}/{name}.grade"
+    # $home/.scores/$recipe_name/$name/$name.grade
+    score_file=os.path.join(os.path.join(os.path.join(os.path.join(home,".scores"),recipe_name),name),f"{name}.grade")
+    
+    if not os.path.isfile(score_file):
+        raise Exception(f"Missing score file: student '{name}' has not been graded on recipe '{recipe_name}'")
+    return score_file
 
 def get_server_file(home):
     return os.path.join(home,".server")

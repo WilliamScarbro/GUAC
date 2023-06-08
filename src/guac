@@ -104,6 +104,8 @@ def parse_arguments():
     add_these(export_parser,required=True)
     add_force(export_parser)
     export_parser.add_argument("--target",metavar="target_name",required=True,help="Canvas: output grades as CSV, Checkin: copy to grade dir")
+    export_parser.add_argument("--late_penalty",metavar="late_penalty",type=int,required=False,help="applies penalty to students who submitted late, default 0 (Canvas only)")
+    
     
     # clear
     clear_parser=subparsers.add_parser("clear",help="clears all saved data")
@@ -162,8 +164,9 @@ def generate(args):
      # generate should pass all tests so we always want to know if it fails
     grade_results = run_tasks(recipe_file,weights,to_execute,run_config,verbose=2)
     grade=Score.fromString(grade_results.grade)
+    print(grade_results.dump(verbose=2))
     if grade.score!=grade.total:
-        raise Exception(f"Error: generate failed {total-score} tests")
+        print(color(Fore.RED,f"Error: generate failed {grade.total-grade.score} tests"))
 
 # --recipe
 def list_tests(args):
@@ -220,12 +223,14 @@ def grade(args):
     name=args.name
     recipe_file=args.recipe
     verbose=int(args.verbose)
-    grade_result=_grade(name,recipe_file)
+    grade_result=_grade(GuacConfig().home,name,recipe_file)
     print(grade_result.dump(verbose=verbose))
     
-def _grade(name,recipe_file):
-    score_file=get_score_file(recipe_file,name)
+def _grade(home,name,recipe_file):
 
+    # possible exception
+    score_file=get_score_file(home,recipe_file,name)
+    
     grade_result=GradeResults.from_data(read_yaml_file(score_file))
     
     return grade_result
@@ -269,11 +274,12 @@ def extract(args):
     print(f"Collecting in {dest_joined_green}")
 
     for stdID in these:
-        tar_loc=tar_location(guac_config.sub_home,guac_config.assignment,stdID)
         try:
+            tar_loc=tar_location(guac_config.sub_home,guac_config.assignment,stdID)
             file_data=read_file_from_tar(tar_loc,file_name)
         except Exception as e:
             print(str(e))
+            continue
         new_name=f"{stdID}.{file_type}" if file_type!='' else stdID
         file_dest=os.path.join(dest_joined,new_name)
         write_output(file_dest,file_data)
@@ -286,26 +292,27 @@ def extract(args):
 def update(args):
     name=args.name
     recipe_file=args.recipe
-    task=args.task
+    task=args.task.replace(' ','_')
     score=args.score
     force=args.force
 
     guac_config=GuacConfig()
-    
-    score_file=get_score_file(recipe_file,name)
+
+    # error if missing score file
+    score_file=get_score_file(guac_config.home,recipe_file,name)
 
 
     grade_result=GradeResults.from_data(read_yaml_file(score_file))
 
     try:
         old_score_str=safe_get_var(grade_result.task_scores,task)
+        old_score=Score.fromString(old_score_str)
     except Exception as e:
-        raise ValueError(f"Summery does not contain task {task}")
-        #confim("add {task} to student's grade")
-        #total=int(input("input task total: "))
-        #old_score=Score(0,total)
+        print(f"Task Scores do not contain task '{task}'")
+        confirm(f"add '{task}' to student's grade",force)
+        total=int(input("input '{task}' total: "))
+        old_score=Score(0,total)
 
-    old_score=Score.fromString(old_score_str)
     score_diff=score-old_score.score
     new_score=Score(score,old_score.total)
     #new_final_score=Score(final_score.score+score_diff,final_score.total)
@@ -328,17 +335,34 @@ def update(args):
 # --these
 # --target
 # --force
+# --late_penalty
 def export(args):
     these=parse_students_yaml(args.these)
     recipe=args.recipe
     target=args.target
     force=args.force
-
+    guac_config=GuacConfig()
+    home=guac_config.home
+    
     if target=="Canvas":
-        std_scores=[(stdID,Score.fromString(_grade(stdID,recipe).grade).score) for stdID in these]
-        
-        for stdID,score in std_scores:
-            print(f"{stdID},{score}")
+
+        late_penalty = 0 if args.late_penalty is None else args.late_penalty
+            
+        std_scores=[]
+        for student in these:
+            try:
+                grade_result=_grade(home,student,recipe)
+                score=Score.fromString(grade_result.grade).score
+                if grade_result.sub_status == "Late":
+                    score-=late_penalty
+                if grade_result.sub_status == "Missing": # in case the grade weights allow "free" points
+                    score=0
+                std_scores.append((student,score))
+            except Exception as e:
+                print(e)
+                
+        for student,score in std_scores:
+            print(f"{student},{score}")
         return
 
     if target=="Checkin":
@@ -349,7 +373,7 @@ def export(args):
 
         os.makedirs(checkin_grade_dir,exist_ok=True)
         for student in these:
-            score_file=get_score_file(recipe,student)
+            score_file=get_score_file(guac_config.home,recipe,student)
             shutil.copy(score_file,os.path.join(checkin_grade_dir,os.path.basename(score_file)))
         return
 

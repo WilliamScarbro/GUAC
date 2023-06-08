@@ -19,11 +19,13 @@ import sys
 import time
 import shutil
 import os
-
+import datetime
+import socket
+        
 from GuacConfig import *
 from GuacInternal import *
 from ParseYaml import *
-
+from Util import *
 
 class Server:
     def __init__(self,recipe_file,guac_config):
@@ -33,6 +35,7 @@ class Server:
         weights_file,self.to_execute=parse_recipe_yaml(recipe_file)
         self.weights=read_yaml_file(weights_file)
 
+        self.desc=self._desc()
         self._make_dirs()
 
     def _make_dirs(self):
@@ -44,33 +47,52 @@ class Server:
         # copy
         try:
             self._write_server_file()
-        
+            self._init_log()
+            
+            sleeping=False
             while True:
+                self._check_current_server()
+                
                 cur=self._check_for_requests()
                 if cur is None:
-                    print("Sleeping")
-                    time.sleep(5)
+                    if not sleeping:
+                        self._log(f"Sleeping: {datetime.datetime.now()}")
+                    time.sleep(10)
+                    sleeping=True
                 else:
+                    sleeping=False
                     self._run(cur)
 
         except Exception as e:
             print(e)
         finally: # this will handle keyboard interrupts
-            self._remove_server_file()
+            self._close_log()
+            self._close_server_file()
             sys.exit()
 
-    def _run(self,cur):
+    def _run(self,student):
         # execute tasks
-        grade_result = run_student(cur,self.recipe_file,self.guac_config,self.weights,self.to_execute)
-        print(f'{student} {grade_result.dump(verbose=0)}')
+        grade_result = run_student(student,self.recipe_file,self.guac_config,self.weights,self.to_execute)
+        self._log(f'{student} {grade_result.dump(verbose=0)}')
         
         # copies student grade file to prelim_dir
-        score_file=get_score_file(self.recipe_file,cur)
+        try:
+            score_file=get_score_file(self.guac_config.home,self.recipe_file,student)
+        except Exception as e: # grading failed for some reason
+            print(e)
+            
         shutil.copyfile(score_file,os.path.join(self._prelim_dir(),os.path.basename(score_file)))
 
         # moves request file from request_dir to tested_dir
-        shutil.move(os.path.join(self._request_dir(),cur),os.path.join(self._tested_dir(),cur))
+        shutil.move(os.path.join(self._request_dir(),student),os.path.join(self._tested_dir(),student))
 
+    def _server_file(self):
+        return get_server_file(self.guac_config.home)
+    
+    def _log(self,message):
+        print(message)
+        write_output(self._log_file(),message+"\n",append=True)
+                
     def _check_for_requests(self):
         new_requests=os.listdir(self._request_dir())
         if not new_requests:
@@ -78,22 +100,44 @@ class Server:
         else:
             return new_requests[0]
 
-    def _write_server_file(self):
-        import datetime
-        import socket
+    def _desc(self):
         
         start_time=str(datetime.datetime.now())
         host_name=socket.gethostname()
+        pid=os.getpid()
         
-        desc={"Server":{"Start Time":start_time,"Host Name":host_name,"Recipe File":self.recipe_file}}
-        output=yaml.dump(desc)
+        desc={"Start_Time":start_time,"Host_Name":host_name,"Recipe_File":self.recipe_file,"PID":pid}
         
-        write_output(get_server_file(self.guac_config.home),output)
+        return desc
 
-    def _remove_server_file(self):
+    def _log_file(self):
+        return os.path.join(self.submiss_dir,"GuacServer.log")
+
+    def _init_log(self):
+        write_output(self._log_file(),yaml.dump(self.desc,sort_keys=False))
+
+    def _close_log(self):
+        write_output(self._log_file(),f"End_Time: {datetime.datetime.now()}\n",append=True)
+        
+    def _check_current_server(self):
+        try:
+            desc=read_yaml_file(self._server_file())
+        except Exception as e:
+            print(e)
+            exit(1)
+            
+        if desc!=self.desc:
+            print("Server file does not match my description, exiting")
+            exit(1)
+            
+    def _write_server_file(self):
+        write_output(get_server_file(self.guac_config.home),yaml.dump(self.desc,sort_keys=False))
+
+    def _close_server_file(self):
         server_file=get_server_file(self.guac_config.home)
+        write_output(server_file,f"Ended: {datetime.datetime.now()}\n",append=True)
         shutil.move(server_file,os.path.join(self.guac_config.home,".last_server"))
-
+    
     def _request_dir(self):
         return os.path.join(self.submiss_dir,f"{self.guac_config.assignment}.requests")
 

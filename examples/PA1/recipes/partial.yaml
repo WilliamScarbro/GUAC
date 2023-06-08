@@ -10,7 +10,8 @@ TaskList:
       Name: MakeTargets
       Source: MakeTargets.py
       Config: data/make_targets.yaml
- 
+      Depends: Setup
+      
   # Collect SEQ
   #
   - Task:
@@ -19,7 +20,10 @@ TaskList:
       Config: 
         - data/collect_1D_seq.yaml
         - data/collect_seq.yaml
-
+      Depends:
+        #- Setup # redundant
+        - MakeTargets
+        
   # Collect PAR
   #
   - Task:
@@ -28,7 +32,9 @@ TaskList:
       Config: 
         - data/collect_1D.yaml
         - data/collect_par.yaml
-
+      Depends:
+        - MakeTargets
+        
   # Compare Result SEQ
   #
   - Task:
@@ -38,7 +44,7 @@ TaskList:
         - data/collect_1D_seq.yaml
         - data/collect_seq.yaml
         - data/compare_result_1D.yaml
-         
+      Depends: Collect Stencil 1D SEQ
  
  
   # Compare Result PAR
@@ -49,7 +55,7 @@ TaskList:
         - data/collect_1D.yaml
         - data/collect_par.yaml
         - data/compare_result_1D.yaml
-         
+      Depends: Collect Stencil 1D
 
   # Compare Time
   - Task:
@@ -59,7 +65,8 @@ TaskList:
         - data/collect_1D.yaml
         - data/collect_par.yaml
         - data/compare_time_1D.yaml
-
+      Depends: Compare Stencil 1D Result PAR
+      
   # Compare Speedup
   - Task:
       Name: Compare Speedup 1D
@@ -68,4 +75,4 @@ TaskList:
         - data/collect_1D.yaml
         - data/collect_par.yaml
         - data/compare_speedup_1D.yaml
-
+      Depends: Compare Time 1D PAR

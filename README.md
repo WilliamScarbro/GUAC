@@ -24,11 +24,11 @@ This will:
 * See [docs/GUAC_CONFIG.md](./docs/GUAC_CONFIG.md) for details of configuration variables.
 
 ### Define Tests
-Tests are defined by a series of tasks. Each task consists of a source module (which will be run by Avocado) and a series of config files.
-The source modules in guac are intended to be generic, therefore creating a test harness for a new assignment should only require writing a series of config files.
+Tests are defined by a series of tasks. Each task consists of a Avocado module and a series of config files.
+The Avocado modules in guac are intended to be generic, therefore creating a test harness for a new assignment should only require writing a series of config files.
 
 * Tasks are defined in a RECIPE_FILE (see [docs/RECIPE_FILE.md](./docs/RECIPE_FILE.md))
-* The set of variables required in a config file is dependent on the module being used (see [docs/AVOCADO_MODULES.md](./docs/AVOCADO_MODULES.md))
+* The actions of each Avocado module is modified by config files by assigning specific Parameter values. (see [docs/AVOCADO_MODULES.md](./docs/AVOCADO_MODULES.md))
 
 ### Assign Test Weights
 ```guac list --recipe RECIPE_FILE```
@@ -65,7 +65,7 @@ When manual grading is required, use inspect to list the contents of a tarball (
 
 * For manual grading of multiple students (e.g. reports) ```guac extract``` will collect all files in a single directory.
 * DEST_DIR will default to ASSIGNMENT_HOME/bin when unspecified.
-* Files are copied to DEST_DIR/FILE_NAME/NAME.FILE_SUFFEX e.g. Bob's file *report.pdf* will be copied to DEST_DIR/report/Bob.pdf.
+* Files are copied to DEST_DIR/FILE_NAME/NAME.FILE_SUFFEX e.g. Alice's file *report.pdf* will be copied to DEST_DIR/report/Alice.pdf.
 
 #### Update
 ```guac update --name NAME --recipe RECIPE_NAME --task TASK --score SCORE``` 
@@ -77,10 +77,30 @@ When grading manually, ```guac update``` updates the score for a single task.
 
 The -\-verbose flag will change grade detail.
 
-* -v 0 $\rightarrow$ only final score
-* -v 1 $\rightarrow$ include task summary
-* -v 2 $\rightarrow$ include all tests
+* -v 0 $\rightarrow$ only final grade
+* -v 1 $\rightarrow$ include summary
+* -v 2 $\rightarrow$ include all detail
 
-### Export to Canvas
-```guac export --these STUDENTS_FILE --recipe RECIPE_NAME```
+### Export
+#### Canvas
+```guac export --these STUDENTS_FILE --recipe RECIPE_NAME --target Canvas```
 
+Ouputs grades of these as CSV (student,grade)
+
+The optional ```--late_penalty``` flag can be used to apply late penalty when exporting.
+
+#### Checkin
+```guac export --these STUDENTS_FILE --recipe RECIPE_NAME --target Checkin```
+
+Copies grade files to SUBMISSION_HOME/ASSIGNMENT.grades/
+
+### Server
+```guac server --recipe RECIPE_NAME```
+
+Starts the test server for recipe RECIPE_NAME. See [./docs/GuacServer.md](./docs/GuacServer.md).
+
+## Abreviated Interface
+
+The file *./miniguac.sh* provides an abreviated interface for guac. Miniguac automatically sets some flags using the NAME, THESE, and RECIPE environment variables.
+
+Execute ```source ./miniguac.sh``` to use.

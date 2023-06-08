@@ -1,8 +1,8 @@
-1-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_clear_work;run: 1
+1-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_clear_work;run: 0
 2-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_tar_exists;run: 1
 3-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_extract_tar;run: 1
 4-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_tar_contents;run: 1
-5-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_copy_lib_contents;run: 1
+5-/s/chopin/k/grad/wscarbro/guac/src/SetUp.py:SetUp.test_copy_lib_contents;run: 0
 1-/s/chopin/k/grad/wscarbro/guac/src/MakeTargets.py:MakeTargets.test_make_clean;run: 1
 2-/s/chopin/k/grad/wscarbro/guac/src/MakeTargets.py:MakeTargets.test_make;run: 1
 1-/s/chopin/k/grad/wscarbro/guac/src/Collect.py:Collect.test_collect;run: 1

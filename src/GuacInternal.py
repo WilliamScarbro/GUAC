@@ -43,16 +43,16 @@ class AvocadoTest:
         return self.score
 
     def verbose(self):
-        res=self.description
-        
-        if self.status == "PASS":
-            res+="Status: PASS\n"
-        else:
-            res+=f"Status: {self.status}\n"
-            res+=f"Message: {self.fail_message}\n"
+        desc=yaml.safe_load(self.description)
 
-        res+=f"Score: {self.score} / {self.points}\n"
-        return res
+        if self.status == "PASS":
+            desc["Status"]="PASS"
+        else:
+            desc["Status"]=self.status
+            desc["Error_Message"]=self.fail_message
+
+        desc["Score"]=f"{self.score} / {self.points}"
+        return yaml.dump(desc)
                 
 
 # avocado_run_wrapper :: String -> [String] -> RunConfig -> [AvocadoTest]
@@ -129,26 +129,26 @@ def list_tests_internal(to_execute,run_config):
 
 class GradeResults:
     # Score, {}, Bool
-    def __init__(self,assignment,grade,task_scores,task_results,late):
+    def __init__(self,assignment,grade,task_scores,task_results,sub_status):
         self.assignment=assignment
         self.grade=grade
         self.task_scores=task_scores
         self.task_results=task_results # results of individual tests
-        self.late=late
+        self.sub_status=sub_status # "OnTime","Late","Missing"
 
     
     def dump(self,verbose=0):
         if verbose==0:
             res=f"Grade: {self.grade}"
-            if self.late:
-                res+=" # (Late)"
+            if self.sub_status=="Late" or self.sub_status=="Missing":
+                res+=f" # ({self.sub_status})" 
             return res
         
         summery = {"Grade":str(self.grade),
                     "Task_Scores":self.task_scores}
-        if self.late:
-            summery["Late"]=True
-        
+
+        summery["Submission_Status"]=self.sub_status
+
         if verbose==1:
             return yaml.dump(summery,sort_keys=False)
         if verbose==2:
@@ -161,9 +161,9 @@ class GradeResults:
         grade=safe_get_var(data,"Grade")
         task_scores=safe_get_var(data,"Task_Scores")
         assignment=safe_get_var(data,"Assignment")
-        late = "Late" in data # assume if present is true
+        sub_status=safe_get_var(data,"Submission_Status")
         task_results=safe_get_var(data,"Task_Results")
-        return GradeResults(assignment,grade,task_scores,task_results,late)
+        return GradeResults(assignment,grade,task_scores,task_results,sub_status)
 
     @staticmethod
     def get_task_scores(task_results):
@@ -179,6 +179,12 @@ class GradeResults:
 # run_tasks :: String -> String -> [Task] -> RunConfig -> (Int,Int)
 def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
 
+    def set_points(tests,weights):
+        test_names=[test.name for test in tests]
+        check_weights(weights,test_names)
+        for test in tests:
+            test.points=int(safe_get_var(weights,test.name))
+        
     logger=Logger(len(to_execute),verbose)
     
     # clear .work
@@ -198,41 +204,79 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
     shutil.rmtree(student_dir,ignore_errors=True)
     os.makedirs(student_dir)
     
-    total=0
-    score=0
+
     task_results=[]
-    task_counter=0
-    task_scores={}
+    task_status_history={}
+    
+    #task_counter=0
     for task in to_execute:
-        task_name_given=safe_get_var(task,'Name').replace(" ","_")
-        task_name=f"{task_counter}-{task_name_given}"
+        logger.log("---",verbose=1)
+        task_name=safe_get_var(task,'Name').replace(" ","_")
+        #task_name=f"{task_counter}-{task_name_given}"
+
+        task_data={"Task_Name":task_name}
         
-        logger.log(color(Fore.GREEN,f"Starting task: {task_name}"),verbose=1)
-
-        exec_results=execute(task,run_config,logger) # [AvocadoTest]
-        test_names=[test.name for test in exec_results]
-        check_weights(weights,test_names)
-
-        task_points=0
-        task_score=0
-        for test in exec_results:
-            test.points=int(safe_get_var(weights,test.name))
-            task_points+=test.points
-            task_score+=test.get_score()
+        dependencies = task['Depends'] if 'Depends' in task else []
+        if not isinstance(dependencies,list):
+            dependencies=[dependencies]
             
+        all_dep_filled=True
+        for dep in dependencies:
+            dep_replaced=dep.replace(" ","_")
+            if not dep_replaced in task_status_history or task_status_history[dep_replaced]!="Passed":
+                all_dep_filled=False
+                first_not_passed=dep_replaced
+                break
+            
+        if not all_dep_filled:
+            if first_not_passed in task_status_history:
+                logger.log(color(Fore.RED,f"Skipping task: {task_name}, required task '{first_not_passed}' was {task_status_history[first_not_passed]}"),verbose=1)
+                task_data["Message"]=f"Skipped, required task '{first_not_passed}' was {task_status_history[first_not_passed]}"
+            else:
+                logger.log(color(Fore.RED,f"Skipping task: {task_name}, required task '{first_not_passed}' is missing"),verbose=1)
+                task_data["Message"]=f"skipped, required task '{first_not_passed}' is Missing"
+                
+            copied_run_config=RunConfig(run_config.guac_config,run_config.recipe,is_listing="True")
+            exec_results=execute(task,copied_run_config,logger)
+            set_points(exec_results,weights)
+            #for test in exec_results
+            task_points=sum(test.points for test in exec_results)
 
+            task_data["Score"]=f"0 / {task_points}"
+            task_status_history[task_name]="Skipped"
+            
+        else:
         
-        parsed_results=[]
-        for test in exec_results:
-            parsed_results.append(yaml.safe_load(test.verbose()))
+            logger.log(color(Fore.GREEN,f"Starting task: {task_name}"),verbose=1)
 
-        task_data={"Task_Name":task_name,
-              "Score":f"{task_score} / {task_points}",
-              "Test_Results":parsed_results}
+            exec_results=execute(task,run_config,logger) # [AvocadoTest]
+            set_points(exec_results,weights)
+            
+            all_passed=True
+            for test in exec_results:
+                if test.status!="PASS":
+                    all_passed=False
+                    break
+
+            task_status_history[task_name] = "Passed" if all_passed else "Failed"
+                
+            task_points=0
+            task_score=0
+            for test in exec_results:
+                task_points+=test.points
+                task_score+=test.get_score()
+            
+        
+            parsed_results=[]
+            for test in exec_results:
+                parsed_results.append(yaml.safe_load(test.verbose()))
+                
+            task_data["Score"]=f"{task_score} / {task_points}"
+            task_data["Test_Results"]=parsed_results
                             
                                  
         task_results.append(task_data)
-        task_counter+=1
+        #task_counter+=1
 
         logger.update() # updates progress bar
 
