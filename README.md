@@ -38,12 +38,14 @@ The Avocado modules in guac are intended to be generic, therefore creating a tes
 * *Hint: you may find the command ```sed "s/$/: 1/g" -i WEIGHTS_FILE``` useful as a starting point.*
 
 ### Generate Master Results
-```guac generate --recipe RECIPE_NAME```
+```guac generate --recipe RECIPE_FILE```
 
 * This step executes the recipe for the submission associated with MASTER.
 * The results are stored in ASSIGNMENT_HOME/.master_results/
 * The .master_results directory has the general structure RECIPE_NAME/{VARIABLES} 
   * the variables used depends on the configuration of the collector module
+  * RECIPE_NAME is derived from RECIPE_FILE by extracting the basename and removing suffex
+  * The RECIPE_NAME of all recipes should be unique (not checked)
 
 ### Automatic Grading
 ```guac run --name NAME --recipe RECIPE_FILE```<br>
@@ -51,7 +53,7 @@ The Avocado modules in guac are intended to be generic, therefore creating a tes
 
 * Student submissions can be graded one at a time (by specifying ```--name```) or in sets (by specifying ```--these```).
 * See [docs/STUDENT_FILE.md](./docs/STUDENT_FILE.md) for details.
-* Results are written to ASSIGNMENT_HOME/.scores/RECIPE/NAME/{TASK_NAMES,NAME.grade}
+* Results are written to ASSIGNMENT_HOME/.scores/RECIPE_NAME/NAME/{TASK_NAMES,NAME.grade}
 * The ```--verbose``` flag will change log level {0,1,2}.
 
 ### Manual Grading
@@ -70,14 +72,14 @@ When manual grading is required, use ```guac inspect``` to list the contents of 
   * e.g. Alice's file *report.pdf* will be copied to DEST_DIR/report/Alice.pdf.
 
 #### Update
-```guac update --name NAME --recipe RECIPE_NAME --task TASK --score SCORE``` 
+```guac update --name NAME --recipe RECIPE_FILE --task TASK --score SCORE``` 
 
 * When grading manually, ```guac update``` updates the score for a single task. 
 * The update is only made to the Task_Score summary and the final grade (not the intermediate score in Task_Results)
 * Update also supports adding new task scores
 
 ### View Grade
-```guac grade --name NAME --recipe RECIPE_NAME```
+```guac grade --name NAME --recipe RECIPE_FILE```
 
 The ``--verbose`` flag will change grade detail.
 
@@ -87,19 +89,19 @@ The ``--verbose`` flag will change grade detail.
 
 ### Export
 #### Canvas
-```guac export --these STUDENTS_FILE --recipe RECIPE_NAME --target Canvas```
+```guac export --these STUDENTS_FILE --recipe RECIPE_FILE --target Canvas```
 
 Ouputs grades of these as CSV (student,grade)
 
 The optional ```--late_penalty``` flag can be used to apply late penalty when exporting.
 
 #### Checkin
-```guac export --these STUDENTS_FILE --recipe RECIPE_NAME --target Checkin```
+```guac export --these STUDENTS_FILE --recipe RECIPE_FILE --target Checkin```
 
 Copies grade files to SUBMISSION_HOME/ASSIGNMENT.grades/
 
 ### Server
-```guac server --recipe RECIPE_NAME```
+```guac server --recipe RECIPE_FILE```
 
 Starts the test server for recipe RECIPE_NAME. See [./docs/GuacServer.md](./docs/GuacServer.md).
 

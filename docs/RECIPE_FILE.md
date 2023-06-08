@@ -19,15 +19,17 @@ Task:
   Name: String
   Source: String
   Config: String | [String]
+  Depends: String | [String]
 ```
 ## Description
  
-WEIGHTS: links to WEIGHTS_FILE<br>
-Task: describes a single avocado execution<br>
-Name: Task name, must be unique across all tasks in recipe (not checked)<br>
-Source: defines the Avocado module to be executed<br>
-Config: List (or single) file containing parameters to configure Avocado module
-  
+* WEIGHTS: links to WEIGHTS_FILE
+* Task: describes a single avocado execution
+* Name: Task name, must be unique across all tasks in recipe (not checked)
+* Source: defines the Avocado module to be executed
+* Config: List (or single) file containing parameters to configure Avocado module
+* Depends: List (or single) task which is required to succeed to run this task
+
 ## Example
 ```
 WEIGHTS: data/full_weights.yaml
@@ -42,11 +44,13 @@ TaskList:
       Name: Collect
       Source: Collect.py
       Config: data/full_collect.yaml
-
+	  Depends: SetUp
+	  
   - Task:
       Name: Compare
       Source: CompareResult.py
       Config:
         - data/full_collect.yaml
         - data/compare_result.yaml
+	  Depends: Collect
 ```
