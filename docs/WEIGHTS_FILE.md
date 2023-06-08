@@ -2,7 +2,7 @@
 
 A weights file assigns points to the tests in a recipe.
 
-The weights file is linked to a RECIPE_FILE through the variable WEIGHTS variable (see docs/RECIPE\_FILE)
+The weights file is linked to a RECIPE_FILE through the variable WEIGHTS (see [./RECIPE\_FILE.md](./RECIPE\_FILE.md))
 
 The structure of a weights file is simply a series of "TEST_NAME: int"
 

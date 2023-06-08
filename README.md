@@ -20,7 +20,7 @@ This will:
 ## Usage
 ### Initialize Assignment Grading Directory
 * Create a new directory; named the same as the assignment (not necessary).
-* execute ```guac init```
+* Execute ```guac init```
 * See [docs/GUAC_CONFIG.md](./docs/GUAC_CONFIG.md) for details of configuration variables.
 
 ### Define Tests
@@ -41,41 +41,45 @@ The Avocado modules in guac are intended to be generic, therefore creating a tes
 ```guac generate --recipe RECIPE_NAME```
 
 * This step executes the recipe for the submission associated with MASTER.
-* The results are stored in ASSIGNMENT_HOME/.master_results
-* The .master_results directory has the general structure RECIPE_NAME/{VARIABLES} (the variables used depends on the configuration of the collector module).
+* The results are stored in ASSIGNMENT_HOME/.master_results/
+* The .master_results directory has the general structure RECIPE_NAME/{VARIABLES} 
+  * the variables used depends on the configuration of the collector module
 
 ### Automatic Grading
 ```guac run --name NAME --recipe RECIPE_FILE```<br>
 ```guac run --these STUDENT_FILE --recipe RECIPE_FILE```
 
-* Student submissions can be graded one at a time (by specifying -\-name) or in sets (by specifying -\-these).
+* Student submissions can be graded one at a time (by specifying ```--name```) or in sets (by specifying ```--these```).
 * See [docs/STUDENT_FILE.md](./docs/STUDENT_FILE.md) for details.
 * Results are written to ASSIGNMENT_HOME/.scores/RECIPE/NAME/{TASK_NAMES,NAME.grade}
-* The -\-verbose flag will change log level.
+* The ```--verbose``` flag will change log level {0,1,2}.
 
 ### Manual Grading
 #### Inspect 
-```guac inspect --name NAME```
+```guac inspect --name NAME```<br>
 ```guac inspect --name NAME --file FILE```
 
-When manual grading is required, use inspect to list the contents of a tarball (when --file is not specified) or to cat a file from a student's submission.
+When manual grading is required, use ```guac inspect``` to list the contents of a tarball (when --file is not specified) or to cat a file from a student's submission.
 
 #### Extract
-```guac extract --these STUDENTS_FILE --file FILE --dest DIST_DIR```
+```guac extract --these STUDENTS_FILE --file FILE --dest DEST_DIR```
 
-* For manual grading of multiple students (e.g. reports) ```guac extract``` will collect all files in a single directory.
+* For manual grading of multiple files (e.g. reports) ```guac extract``` will collect all files in a single directory.
 * DEST_DIR will default to ASSIGNMENT_HOME/bin when unspecified.
-* Files are copied to DEST_DIR/FILE_NAME/NAME.FILE_SUFFEX e.g. Alice's file *report.pdf* will be copied to DEST_DIR/report/Alice.pdf.
+* Files are copied to DEST_DIR/FILE_NAME/NAME.FILE_SUFFEX
+  * e.g. Alice's file *report.pdf* will be copied to DEST_DIR/report/Alice.pdf.
 
 #### Update
 ```guac update --name NAME --recipe RECIPE_NAME --task TASK --score SCORE``` 
 
-When grading manually, ```guac update``` updates the score for a single task.
+* When grading manually, ```guac update``` updates the score for a single task. 
+* The update is only made to the Task_Score summary and the final grade (not the intermediate score in Task_Results)
+* Update also supports adding new task scores
 
 ### View Grade
 ```guac grade --name NAME --recipe RECIPE_NAME```
 
-The -\-verbose flag will change grade detail.
+The ``--verbose`` flag will change grade detail.
 
 * -v 0 $\rightarrow$ only final grade
 * -v 1 $\rightarrow$ include summary
@@ -99,8 +103,8 @@ Copies grade files to SUBMISSION_HOME/ASSIGNMENT.grades/
 
 Starts the test server for recipe RECIPE_NAME. See [./docs/GuacServer.md](./docs/GuacServer.md).
 
-## Abreviated Interface
+## miniguac
 
-The file *./miniguac.sh* provides an abreviated interface for guac. Miniguac automatically sets some flags using the NAME, THESE, and RECIPE environment variables.
-
-Execute ```source ./miniguac.sh``` to use.
+* The file *./miniguac.sh* provides an abreviated interface for guac. 
+* Miniguac automatically sets some flags using the NAME, THESE, and RECIPE environment variables.
+* Execute ```source ./miniguac.sh``` to use.
