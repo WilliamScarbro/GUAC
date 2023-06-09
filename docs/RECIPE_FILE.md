@@ -19,7 +19,7 @@ Task:
   Name: String
   Source: String
   Config: String | [String]
-  Depends: String | [String]
+  Depends: String | [String] (optional)
 ```
 ## Description
  
@@ -27,10 +27,12 @@ Task:
 * Task: describes a single avocado execution
 * Name: Task name, must be unique across all tasks in recipe (not checked)
 * Source: defines the Avocado module to be executed
-* Config: List (or single) file containing parameters to configure Avocado module
-* Depends: List (or single) task which is required to succeed to run this task
+* Config: List of (or single) files containing parameters to configure Avocado module
+* Depends: List of (or single) tasks which are required to succeed to run current task
 
 ## Example
+*from [../examples/PYTHON_MERGE_SORT/recipes/full.yaml](../examples/PYTHON_MERGE_SORT/recipes/full.yaml)*
+
 ```
 WEIGHTS: data/full_weights.yaml
 

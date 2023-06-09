@@ -328,7 +328,21 @@ def update(args):
     print(f"New summery:\n---\n{new_summery}---")
 
     confirm("update score",force)
-    
+
+    write_output(score_file,grade_result.dump(verbose=2))
+
+    # add message
+    confirm("add message",force)
+
+    default_message=f"Manually graded task '{task}' with score '{score}'"
+    message=None
+    if not force:
+        message=input(f"Update message, default ({default_message}):")
+    if message==None or message=='':
+        message=default_message
+
+    grade_result.add_message(message)
+
     write_output(score_file,grade_result.dump(verbose=2))
     
 # --recipe

@@ -74,9 +74,9 @@ When manual grading is required, use ```guac inspect``` to list the contents of 
 #### Update
 ```guac update --name NAME --recipe RECIPE_FILE --task TASK --score SCORE``` 
 
-* When grading manually, ```guac update``` updates the score for a single task. 
+* When grading manually, ```guac update``` updates the score for a single task in the GRADE_RESULTS file (see [./docs/GRADE_RESULTS.md](./docs/GRADE_RESULTS.md)). 
 * The update is only made to the Task_Score summary and the final grade (not the intermediate score in Task_Results)
-* Update also supports adding new task scores
+* Update also supports adding new task scores.
 
 ### View Grade
 ```guac grade --name NAME --recipe RECIPE_FILE```

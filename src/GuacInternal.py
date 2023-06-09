@@ -129,13 +129,13 @@ def list_tests_internal(to_execute,run_config):
 
 class GradeResults:
     # Score, {}, Bool
-    def __init__(self,assignment,grade,task_scores,task_results,sub_status):
+    def __init__(self,assignment,grade,task_scores,task_results,sub_status,messages):
         self.assignment=assignment
         self.grade=grade
         self.task_scores=task_scores
         self.task_results=task_results # results of individual tests
         self.sub_status=sub_status # "OnTime","Late","Missing"
-
+        self.messages=messages
     
     def dump(self,verbose=0):
         if verbose==0:
@@ -149,6 +149,9 @@ class GradeResults:
 
         summery["Submission_Status"]=self.sub_status
 
+        if not self.messages is None:
+            summery["Messages"]=self.messages
+            
         if verbose==1:
             return yaml.dump(summery,sort_keys=False)
         if verbose==2:
@@ -156,6 +159,12 @@ class GradeResults:
             summery["Task_Results"]=self.task_results
             return yaml.dump(summery,sort_keys=False)
 
+    def add_message(self,message):
+        if self.messages==None:
+            self.messages=[message]
+        else:
+            self.messages.append(message)
+            
     @staticmethod
     def from_data(data):
         grade=safe_get_var(data,"Grade")
@@ -163,7 +172,8 @@ class GradeResults:
         assignment=safe_get_var(data,"Assignment")
         sub_status=safe_get_var(data,"Submission_Status")
         task_results=safe_get_var(data,"Task_Results")
-        return GradeResults(assignment,grade,task_scores,task_results,sub_status)
+        messages=data["Messages"] if "Messages" in data else None
+        return GradeResults(assignment,grade,task_scores,task_results,sub_status,messages)
 
     @staticmethod
     def get_task_scores(task_results):

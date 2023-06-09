@@ -10,13 +10,14 @@ TaskList:
       Name: Collect
       Source: Collect.py
       Config: data/full_collect.yaml
-
+      Depends: SetUp
+      
   - Task:
       Name: Compare
       Source: CompareResult.py
       Config:
         - data/full_collect.yaml
         - data/compare_result.yaml
-       
+      Depends: Collect 
   
     
