@@ -30,7 +30,7 @@ class GuacTest(Test):
     
     def _write_whiteboard_yaml(self,test_desc):
         #self.whiteboard=""
-        self.whiteboard=yaml.safe_dump(test_desc,sort_keys=False)
+        self.whiteboard+=yaml.safe_dump(test_desc,sort_keys=False)
         #order=self.desc_order()
         #for var in order:
         #    if not var in test_desc:
