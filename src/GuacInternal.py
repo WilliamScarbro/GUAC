@@ -303,7 +303,7 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
     task_scores=GradeResults.get_task_scores(task_results)
     grade=GradeResults.get_grade(task_scores)
     
-    grade_results=GradeResults(assignment,grade,task_scores,task_results,late)
+    grade_results=GradeResults(assignment,grade,task_scores,task_results,late,None)
 
     write_output(os.path.join(student_dir,f"{student}.grade"),grade_results.dump(verbose=2))
 
