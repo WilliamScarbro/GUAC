@@ -143,9 +143,10 @@ class GradeResults:
             if self.sub_status=="Late" or self.sub_status=="Missing":
                 res+=f" # ({self.sub_status})" 
             return res
-        
-        summery = {"Grade":str(self.grade),
-                    "Task_Scores":self.task_scores}
+
+        summery={}
+        summery["Grade"]=str(self.grade)
+        summery["Task_Scores"]=self.task_scores
 
         summery["Submission_Status"]=self.sub_status
 
@@ -157,7 +158,7 @@ class GradeResults:
         if verbose==2:
             summery["Assignment"]=self.assignment
             summery["Task_Results"]=self.task_results
-            return yaml.dump(summery,sort_keys=False)
+            return yaml.safe_dump(summery,sort_keys=False)
 
     def add_message(self,message):
         if self.messages==None:

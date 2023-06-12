@@ -30,17 +30,18 @@ class GuacTest(Test):
     
     def _write_whiteboard_yaml(self,test_desc):
         #self.whiteboard=""
-        order=self.desc_order()
-        for var in order:
-            if not var in test_desc:
-                continue
-            #self.whiteboard+=f"{var}: {test_desc[var]}\n"
-            self.whiteboard+=yaml.dump({var:test_desc[var]})
-            del test_desc[var]
-
-        for key,value in test_desc.items():
-            #self.whiteboard+=f"{key}: {value}\n"
-            self.whiteboard+=yaml.dump({key:value})
+        self.whiteboard=yaml.safe_dump(test_desc,sort_keys=False)
+        #order=self.desc_order()
+        #for var in order:
+        #    if not var in test_desc:
+        #        continue
+        #    #self.whiteboard+=f"{var}: {test_desc[var]}\n"
+        #    self.whiteboard+=yaml.dump({var:test_desc[var]})
+        #    del test_desc[var]
+        #
+        #for key,value in test_desc.items():
+        #    #self.whiteboard+=f"{key}: {value}\n"
+        #    self.whiteboard+=yaml.dump({key:value})
         self.log.debug(self.whiteboard)
 
 class Score:

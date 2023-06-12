@@ -81,3 +81,8 @@ def parse_score_file(file_path):
     
     return score_data,score_data_split[0],summery,score,late
     
+# converts to ordered dict, necessary to preserve order
+# data : [(a,b)]
+def yamlDumpList(data):
+    od = ordereddict(data)
+    yaml.dump(od)
