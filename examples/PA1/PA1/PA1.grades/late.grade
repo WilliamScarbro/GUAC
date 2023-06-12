@@ -1,0 +1,1090 @@
+
+# Grading Details
+
+Task_Results:
+  Setup: 5 / 5
+  MakeTargets: 2 / 2
+  Collect Stencil 1D SEQ: 1 / 1
+  Collect Stencil 2D SEQ: 1 / 1
+  Collect MatVec SEQ: 1 / 1
+  Collect Stencil 1D: 8 / 8
+  Collect Stencil 2D: 8 / 8
+  Collect MatVec: 8 / 8
+  Compare Stencil 1D Result SEQ: 1 / 1
+  Compare Stencil 2D Result SEQ: 1 / 1
+  Compare MatVec Result SEQ: 1 / 1
+  Compare Stencil 1D Result PAR: 8 / 8
+  Compare Stencil 2D Result PAR: 8 / 8
+  Compare MatVec Result PAR: 8 / 8
+  Compare Time 1D PAR: 8 / 8
+  Compare Time 2D PAR: 8 / 8
+  Compare Time MatVec PAR: 8 / 8
+  Compare Speedup 1D: 8 / 8
+  Compare Speedup 2D: 8 / 8
+  Compare Speedup MatVec: 8 / 8
+
+
+Score: 109 / 109
+
+---
+Description: Clearing working directory
+Status: PASS
+Score: 1 / 1
+---
+Description: Testing Tarball exists
+Message: Grading LATE_PA1.tar
+Contents: 'PA1
+
+  PA1/mat_vec.c
+
+  PA1/stencil_1D.c
+
+  PA1/makefile
+
+  PA1/stencil_2D.c
+
+  PA1/timer.h
+
+  PA1/timer.c
+
+  PA1/report.pdf
+
+  '
+Status: PASS
+Score: 1 / 1
+---
+Description: Extracting Tarball to working directory
+Status: PASS
+Score: 1 / 1
+---
+Description: Checking Tarball Contents
+Required Contents:
+- mat_vec.c
+- stencil_1D.c
+- makefile
+- stencil_2D.c
+- report.pdf
+Status: PASS
+Score: 1 / 1
+---
+Description: Copying into working directory
+LIB_CONTENTS:
+- timer.h
+- timer.c
+Status: PASS
+Score: 1 / 1
+---
+Description: Checking 'make clean' removes targets
+MAKE_TARGETS:
+- stencil_1D_SEQ
+- stencil_2D_SEQ
+- mat_vec_SEQ
+- stencil_1D
+- stencil_2D
+- mat_vec
+Status: PASS
+Score: 1 / 1
+---
+Description: Checking 'make' produces targets
+MAKE_TARGETS:
+- stencil_1D_SEQ
+- stencil_2D_SEQ
+- mat_vec_SEQ
+- stencil_1D
+- stencil_2D
+- mat_vec
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D_SEQ 2000 30000
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D_SEQ 350 350
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec_SEQ 2500 1000
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 3
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 5
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 6
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 7
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 1
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 2
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 3
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 4
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 5
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 6
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 7
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./stencil_2D 350 350
+THREADS: 8
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 1
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 2
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 3
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 4
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 5
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 6
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 7
+Status: PASS
+Score: 1 / 1
+---
+Description: Collecting Results
+COMMAND: ./mat_vec 2500 1000
+THREADS: 8
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D_SEQ 2000 30000
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D_SEQ 350 350
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec_SEQ 2500 1000
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 3
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 5
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 6
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 7
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+Master_Result: 'data[0]: 5000.000000
+
+  data[1]: 5000.000000
+
+  data[200]: 2079.552498
+
+  data[400]: 515.472560
+
+  data[1000]: 0.455094'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 1
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 2
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 3
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 4
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 5
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 6
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 7
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 8
+Master_Result: '10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 10000.000000 10000.000000 10000.000000
+
+  10000.000000 10000.000000 9968.808913 9949.625381 9926.009224
+
+  10000.000000 10000.000000 9949.625381 9918.643353 9880.502494
+
+  10000.000000 10000.000000 9926.009224 9880.502494 9824.480799'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 1
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 2
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 3
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 4
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 5
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 6
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 7
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing results with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 8
+Master_Result: 'c[0] = 499500.0
+
+  c[312] = 811500.0
+
+  c[624] = 1123500.0
+
+  c[936] = 1435500.0
+
+  c[1248] = 1747500.0
+
+  c[1560] = 2059500.0
+
+  c[1872] = 2371500.0
+
+  c[2184] = 2683500.0
+
+  c[2496] = 2995500.0'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+EPSILON: 1.5
+Maximum_Time: 0.11105999999999999
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+EPSILON: 1.5
+Maximum_Time: 0.08600450000000001
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 3
+EPSILON: 1.5
+Maximum_Time: 0.07309399999999999
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+EPSILON: 1.5
+Maximum_Time: 0.0742355
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 5
+EPSILON: 1.5
+Maximum_Time: 0.076923
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 6
+EPSILON: 1.5
+Maximum_Time: 0.0797175
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 7
+EPSILON: 1.5
+Maximum_Time: 0.08222750000000001
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+EPSILON: 1.5
+Maximum_Time: 0.0802855
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 1
+EPSILON: 1.5
+Maximum_Time: 0.076355
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 2
+EPSILON: 1.5
+Maximum_Time: 0.0378575
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 3
+EPSILON: 1.5
+Maximum_Time: 0.029271
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 4
+EPSILON: 1.5
+Maximum_Time: 0.022768999999999998
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 5
+EPSILON: 1.5
+Maximum_Time: 0.020900500000000002
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 6
+EPSILON: 1.5
+Maximum_Time: 0.018853
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 7
+EPSILON: 1.5
+Maximum_Time: 0.022679500000000002
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 8
+EPSILON: 1.5
+Maximum_Time: 0.0193225
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 1
+EPSILON: 1.5
+Maximum_Time: 0.0036700000000000005
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 2
+EPSILON: 1.5
+Maximum_Time: 0.001975
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 3
+EPSILON: 1.5
+Maximum_Time: 0.0016644999999999997
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 4
+EPSILON: 1.5
+Maximum_Time: 0.0014455
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 5
+EPSILON: 1.5
+Maximum_Time: 0.001365
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 6
+EPSILON: 1.5
+Maximum_Time: 0.0012764999999999999
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 7
+EPSILON: 1.5
+Maximum_Time: 0.0013075
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing time with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 8
+EPSILON: 1.5
+Maximum_Time: 0.0012814999999999999
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 1
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 2
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 3
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 4
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 5
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 6
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 7
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_1D 2000 30000
+THREADS: 8
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 1
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 2
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 3
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 4
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 5
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 6
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 7
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./stencil_2D 350 350
+THREADS: 8
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 1
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 2
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 3
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 4
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 5
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 6
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 7
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
+---
+Description: Comparing speedup with master
+COMMAND: ./mat_vec 2500 1000
+THREADS: 8
+EPSILON: '0.75'
+Status: PASS
+Score: 1 / 1
