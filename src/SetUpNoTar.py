@@ -51,7 +51,7 @@ class SetUpNoTar(Util.GuacTest):
     #
 
     def test_copy_file(self):
-        self._guac_handler(self._test_extract_tar)
+        self._guac_handler(self._test_copy_file)
         
     def _test_copy_file(self):
         """
