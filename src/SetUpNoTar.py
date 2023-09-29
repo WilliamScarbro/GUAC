@@ -38,7 +38,7 @@ class SetUpNoTar(Util.GuacTest):
         :param ASSIGNMENT
         """
         
-        desc={"Description":"Testing Tarball exists"}
+        desc={"Description":"Testing submission exists"}
         self._write_whiteboard_yaml(desc)
 
         file_loc = self._file_location()
@@ -49,6 +49,34 @@ class SetUpNoTar(Util.GuacTest):
         self._write_whiteboard_yaml(file_desc)
         
     #
+
+    def test_copy_file(self):
+        self._guac_handler(self._test_extract_tar)
+        
+    def _test_copy_file(self):
+        """
+        :avocado: tags=extract_tar
+        :param STUDENT
+        :param HOME
+        :param ASSIGNMENT
+        :param FILE_TYPE
+        """
+       
+        desc={"Description":"Moving submission to working directory"}
+        self._write_whiteboard_yaml(desc)
+        #
+        work=Util.get_work_dir(self._safe_param("HOME"))
+        file_loc=self._file_location()
+        shutil.move(file_loc,os.path.join(work))
+
+        # not the best, should find a better solution, or a better standard
+        #assignment_dir=os.path.join(work,self._safe_param("ASSIGNMENT"))
+        #if os.path.isdir(assignment_dir):
+        #    for el in os.listdir(assignment_dir):
+        #        shutil.move(os.path.join(assignment_dir,el),os.path.join(work,el))
+                
+    #
+
 
     def test_copy_lib_contents(self):
         self._guac_handler(self._test_copy_lib_contents)
