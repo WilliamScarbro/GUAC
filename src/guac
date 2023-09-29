@@ -122,6 +122,7 @@ def parse_arguments():
 # --recipe
 # --verbose {0,1,2}
 def run(args):
+    check_for_server()
 
     recipe_file=args.recipe
     guac_config=GuacConfig()
@@ -145,6 +146,7 @@ def run(args):
         
 # --recipe
 def generate(args):
+    check_for_server()
     recipe_file=args.recipe
     
     run_config=RunConfig(GuacConfig(),recipe_file)
@@ -184,6 +186,7 @@ def init(args):
     if os.path.isfile("guac.yaml"):
         print("File 'guac.yaml' already exists")
         confirm("replace 'guac.yaml'",force)
+    else:
         
     user_home=os.environ['HOME']
     config_vars={"ASSIGNMENT":os.path.basename(cwd),
@@ -220,6 +223,8 @@ def init(args):
 # --recipe
 # --verbose {0,1,2}
 def grade(args):
+    check_for_server()
+    
     name=args.name
     recipe_file=args.recipe
     verbose=int(args.verbose)
@@ -238,6 +243,8 @@ def _grade(home,name,recipe_file):
 # --name
 # --file
 def inspect(args):
+    check_for_server()
+    
     name=args.name
     file_name=args.file
 
@@ -255,6 +262,8 @@ def inspect(args):
 # [--dest]
 # --force
 def extract(args):
+    check_for_server()
+
     file_name=args.file
     force=args.force
     guac_config=GuacConfig()
@@ -290,6 +299,8 @@ def extract(args):
 # --score
 # --force
 def update(args):
+    check_for_server()
+    
     name=args.name
     recipe_file=args.recipe
     task=args.task.replace(' ','_')
@@ -351,6 +362,8 @@ def update(args):
 # --force
 # --late_penalty
 def export(args):
+    check_for_server()
+    
     these=parse_students_yaml(args.these)
     recipe=args.recipe
     target=args.target
@@ -398,6 +411,7 @@ def export(args):
     exit(1)
 
 def clear(args):
+    check_for_server()
     dirs=[".master_results",".scores",".work",".config"]
     confirm(f"clear all data in directories: {', '.join(dirs)}",False)
 
@@ -409,6 +423,7 @@ def clear(args):
         
 # --recipe
 def server(args):
+    check_for_server()
     recipe=args.recipe
     guac_config=GuacConfig()
 
@@ -416,11 +431,7 @@ def server(args):
 
     server.serve()
 
-    
-    
-def main():
-    #shutil.rmtree("/tmp/guac",ignore_errors=True)
-
+def check_for_server():
     # if server is running in current directory, guac will not run
     guac_config=GuacConfig()
 
@@ -431,7 +442,12 @@ def main():
         print(contents)
         print(f"If you are sure the server is not running, remove {server_file}")
         exit(1)
+     
     
+def main():
+    #shutil.rmtree("/tmp/guac",ignore_errors=True)
+
+   
     parser,args = parse_arguments()
 
     if hasattr(args,"func"):
