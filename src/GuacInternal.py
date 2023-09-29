@@ -298,7 +298,7 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
     sub_home = run_config.guac_config.sub_home
     student = run_config.student
     
-    _,late=tar_location(sub_home,assignment,student)
+    _,late=file_location(sub_home,assignment,student,"tar")
                         
     task_scores=GradeResults.get_task_scores(task_results)
     grade=GradeResults.get_grade(task_scores)
