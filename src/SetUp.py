@@ -131,7 +131,7 @@ class SetUp(Util.GuacTest):
         assignment=self._safe_param("ASSIGNMENT")
         student=self._safe_param("STUDENT")
 
-        tar_loc,status = Util.tar_location(sub_home,assignment,student)
+        tar_loc,status = Util.file_location(sub_home,assignment,student,"tar")
 
         if status=="Missing" or tar_loc==None: # should be true at the same time
             self.fail("Missing submission")

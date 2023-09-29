@@ -173,36 +173,37 @@ def get_work_dir(home):
     return os.path.join(home,".work")
 
 # {sub_home}/{assignment}/{student}/{assignment}.tar
-def tar_location(sub_home,assignment,student):
+def file_location(sub_home,assignment,student,file_type):
 
     tar_dir=os.path.join(os.path.join(sub_home,assignment),student)
     if not os.path.isdir(tar_dir):
         return None,"Missing"
     
-    on_time=os.path.join(tar_dir,assignment+".tar")
-    late=os.path.join(tar_dir,f"LATE_{assignment}.tar")
+    on_time=os.path.join(tar_dir,assignment+"."+file_type)
+    late=os.path.join(tar_dir,f"LATE_{assignment}.{file_type}")
 
     
-    tars = sorted(Path(tar_dir).iterdir(), key=os.path.getmtime)
+    files = sorted(Path(tar_dir).iterdir(), key=os.path.getmtime)
 
-    if not tars:
-        raise Exception(f"No submission found for {student}") 
+    if not files:
+        return None, "Missing" #raise Exception(f"No submission found for {student}") 
 
-    if "TAR_NAME" in os.environ:
-        tar_name = os.environ['TAR_NAME']
-        tar=None
-        for path in tars:
-            if os.path.basename(path) == tar_name:
-                tar = path
+    if "FILE_NAME" in os.environ:
+        file_name = os.environ['FILE_NAME']
+        cur_file=None
+        for path in files:
+            if os.path.basename(path) == file_name:
+                cur_file = path
                 break
-        if tar is None:
+        if file_name is None:
             return None, "Missing" #raise Exception(f"Cannot find tar submission named TAR_NAME: 'tar_name'")
     else:
-        tar = tars[-1]
+        # get latest file
+        cur_file = files[-1]
         
-    status = "Late" if os.path.basename(tar) == f"LATE_{assignment}.tar" else "OnTime"
+    status = "Late" if "LATE" in os.path.basename(cur_file) else "OnTime"
 
-    return str(tar),status
+    return str(cur_file),status
 
 def get_score_file(home,recipe_file,name):
     recipe_name=os.path.basename(recipe_file).split('.')[0]
