@@ -67,7 +67,7 @@ class SetUpNoTar(Util.GuacTest):
         #
         work=Util.get_work_dir(self._safe_param("HOME"))
         file_loc=self._file_location()
-        shutil.move(file_loc,os.path.join(work))
+        shutil.copy(file_loc,os.path.join(work))
 
         # not the best, should find a better solution, or a better standard
         #assignment_dir=os.path.join(work,self._safe_param("ASSIGNMENT"))
