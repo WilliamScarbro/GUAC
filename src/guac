@@ -186,7 +186,6 @@ def init(args):
     if os.path.isfile("guac.yaml"):
         print("File 'guac.yaml' already exists")
         confirm("replace 'guac.yaml'",force)
-    else:
         
     user_home=os.environ['HOME']
     config_vars={"ASSIGNMENT":os.path.basename(cwd),
