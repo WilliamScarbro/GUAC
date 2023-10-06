@@ -83,7 +83,9 @@ def avocado_run_wrapper(script,script_config,run_config,logger):
     yaml_file_append(new_config,run_config_yaml,src_is_data=True)
     
     # execute avocado script
-    cmd = f"avocado run {run_config.guac_config.guac_home}/src/{script} --mux-yaml {new_config}  "
+    guac_home=run_config.guac_config.guac_home
+    job_timeout=run_config.guac_config.job_timeont
+    cmd = f"avocado run {guac_home}/src/{script} --mux-yaml {new_config}  job-timeout={job_timeout}"
     logger.log(color(Fore.BLUE,f"Executing: {cmd}"),verbose=2)
     #try:
     code,out,error = run_command(run_config.guac_config.home,cmd)
