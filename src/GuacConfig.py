@@ -3,7 +3,7 @@ from ParseYaml import *
 
 class GuacConfig:
     def __init__(self):
-        self.assignment,self.home,self.avo_home,self.sub_home,self.guac_home,self.master = parse_guac_yaml("guac.yaml")
+        self.assignment,self.home,self.avo_home,self.sub_home,self.guac_home,self.master,self.job_timeout = parse_guac_yaml("guac.yaml")
 
 class RunConfig:
     def __init__(self,guac_config,recipe,student=None,is_listing="False"):
@@ -18,6 +18,7 @@ class RunConfig:
             self.is_master="False"
         self.is_listing=is_listing
     
+    # variables that need to be passed to tests
     def get_run_config_yaml(self):
         return yaml.dump({"ASSIGNMENT":self.guac_config.assignment,
                           "HOME":self.guac_config.home,

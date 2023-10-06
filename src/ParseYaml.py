@@ -29,7 +29,11 @@ def parse_guac_yaml(file_path):
     avo_home=safe_get_var(data,"AVOCADO_HOME")
     sub_home=safe_get_var(data,"SUBMISSION_HOME")
     guac_home=safe_get_var(data,"GUAC_HOME")
-    return assignment,home,avo_home,sub_home,guac_home,master
+    try:
+        job_timeout=safe_get_var(data,"JOB_TIMEOUT")
+    except ValueError as e:
+        job_timeout=0
+    return assignment,home,avo_home,sub_home,guac_home,master,job_timeout
 
 # data Task = {Name:String,Source:String,Config:[String]}
 # parse_recipe_yaml :: String -> (String,[Task])
