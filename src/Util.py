@@ -113,7 +113,9 @@ def yaml_file_append(dest,src,src_is_data=False):
     dest_handle.close()
 import subprocess
 
-def run_command(cwd, cmd, env=None, timeout=120):
+# Avocado has its own default timeout per task (120s)
+# timeout here is just in case
+def run_command(cwd, cmd, env=None, timeout=1000):
     try:
         # Execute the command
         process = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,cwd=cwd)
@@ -172,18 +174,20 @@ def get_master_dir(home,recipe_name):
 def get_work_dir(home):
     return os.path.join(home,".work")
 
-# {sub_home}/{assignment}/{student}/{assignment}.tar
+# {sub_home}/{assignment}/{student}/{assignment}.{file_type}
+# if FILE_NAME env var is set, match file name
+# if FILE_NAME is not matched, or FILE_NAME is not set, use most recent file 
 def file_location(sub_home,assignment,student,file_type):
 
-    tar_dir=os.path.join(os.path.join(sub_home,assignment),student)
-    if not os.path.isdir(tar_dir):
+    std_dir=os.path.join(os.path.join(sub_home,assignment),student)
+    if not os.path.isdir(std_dir):
         return None,"Missing"
     
-    on_time=os.path.join(tar_dir,assignment+"."+file_type)
-    late=os.path.join(tar_dir,f"LATE_{assignment}.{file_type}")
+    #on_time=os.path.join(std_dir,assignment+"."+file_type)
+    #late=os.path.join(std_dir,f"LATE_{assignment}.{file_type}")
 
     
-    files = sorted(Path(tar_dir).iterdir(), key=os.path.getmtime)
+    files = sorted(Path(std_dir).iterdir(), key=os.path.getmtime)
 
     if not files:
         return None, "Missing" #raise Exception(f"No submission found for {student}") 
@@ -195,8 +199,8 @@ def file_location(sub_home,assignment,student,file_type):
             if os.path.basename(path) == file_name:
                 cur_file = path
                 break
-        if file_name is None:
-            return None, "Missing" #raise Exception(f"Cannot find tar submission named TAR_NAME: 'tar_name'")
+        if cur_file is None:
+            cur_file = files[-1] #return None, "Missing" #raise Exception(f"Cannot find tar submission named TAR_NAME: 'tar_name'")
     else:
         # get latest file
         cur_file = files[-1]

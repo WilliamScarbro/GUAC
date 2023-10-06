@@ -63,7 +63,7 @@ def avocado_run_wrapper(script,script_config,run_config,logger):
         avo_home = run_config.guac_config.avo_home
         with open(avo_home+"/job-results/latest/results.json","r") as f:
             data = json.load(f)
-        return [AvocadoTest.parse_json_dict(test) for test in data["tests"]]
+            return [AvocadoTest.parse_json_dict(test) for test in data["tests"]]
 
     
     # aggregate config files and RunConfig
@@ -91,14 +91,21 @@ def avocado_run_wrapper(script,script_config,run_config,logger):
         logger.log(color(Fore.RED,out),verbose=2)
         logger.log(color(Fore.RED,error),verbose=2)
     if code!=2: # avocado does not produce logs in this case
-        logs=parse_for_regex_group(out,"JOB LOG\s+:\s+(.*)")
-        logger.log(color(Fore.BLUE,f"Logs: {logs}"),verbose=2)
+        try:
+            logs=parse_for_regex_group(out,"JOB LOG\s+:\s+(.*)")
+            logger.log(color(Fore.BLUE,f"Logs: {logs}"),verbose=2)
+        except Exception as e:
+            print(out)
+            print(e)
     if code==2: # this is an avocado error, not a test error
         print(color(Fore.RED,error))
     if code!=0 and run_config.is_listing=="True":
         raise Exception("Task failed")
         
-    return parse_result_json()
+    if code==0 or code==1:
+        return parse_result_json()
+    else:
+        return []
 
 ###
 # Transform guac actions to avocado
@@ -119,7 +126,12 @@ def list_tests_internal(to_execute,run_config):
     logger=Logger(len(to_execute),2)
     
     for task in to_execute:
-        results+=execute(task,run_config,logger)
+        try:
+            res=execute(task,run_config,logger)
+            if res:
+                resutls+=res
+        except Exception as e:
+            print(e)
         logger.update()
     logger.close()
     print(color(Fore.GREEN,">>>>>> Begin Test List <<<<<<<"))
@@ -191,6 +203,8 @@ class GradeResults:
 def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
 
     def set_points(tests,weights):
+        if not tests:
+            return
         test_names=[test.name for test in tests]
         check_weights(weights,test_names)
         for test in tests:

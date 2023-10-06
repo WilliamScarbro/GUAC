@@ -60,14 +60,19 @@ class SetUpNoTar(Util.GuacTest):
         :param HOME
         :param ASSIGNMENT
         :param FILE_TYPE
+        :param FILE_NAME
         """
        
+        # the config var FILE_NAME is the name the file should have in work
+        # the (optional) env var FILE_NAME is the file to use for grading in ~/Checkin/{ASSIGNMENT}/{STUDENT}/
+
         desc={"Description":"Moving submission to working directory"}
         self._write_whiteboard_yaml(desc)
         #
         work=Util.get_work_dir(self._safe_param("HOME"))
         file_loc=self._file_location()
-        shutil.copy(file_loc,os.path.join(work))
+        file_name=self._safe_param("FILE_NAME")
+        shutil.copy(file_loc,os.path.join(work,file_name))
 
         # not the best, should find a better solution, or a better standard
         #assignment_dir=os.path.join(work,self._safe_param("ASSIGNMENT"))

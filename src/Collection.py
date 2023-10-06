@@ -119,7 +119,7 @@ class PythonRunner(Runner):
         #self.version=test.get_param
 
     def command(self):
-        return f"python {self.executable} {self.args}"
+        return f"python3 {self.executable} {self.args}"
     
 # abstract
 class PARRunner(Runner):
