@@ -124,7 +124,7 @@ class PythonRunner(Runner):
             for arg in self.args:
                 run+=" "+arg
         else:
-            run+=" "self.args    
+            run+=" "+self.args    
         return run
     
 # abstract
