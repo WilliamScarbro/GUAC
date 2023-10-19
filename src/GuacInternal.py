@@ -131,7 +131,7 @@ def list_tests_internal(to_execute,run_config):
         try:
             res=execute(task,run_config,logger)
             if res:
-                resutls+=res
+                results+=res
         except Exception as e:
             print(e)
         logger.update()

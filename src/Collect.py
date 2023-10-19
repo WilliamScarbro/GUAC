@@ -6,10 +6,7 @@ import os
 from avocado.utils import archive, build, process
 from avocado import Test
 
-class Collect(Util.GuacTest):
-    def test_collect(self):
-        self._guac_handler(self._test_collect)
-        
+class _Collect:
     def _test_collect(self):
         """
         :param EXEC: executable
@@ -41,5 +38,10 @@ class Collect(Util.GuacTest):
         if code!=0:
             self.whiteboard+=f"EXIT-CODE: {code}\n"
             self.fail(f"Program produced non-zero exit code: {code}")
+
+class Collect(Util.GuacTest,_Collect):
+    def test_collect(self):
+        self._guac_handler(self._test_collect)
         
+            
 

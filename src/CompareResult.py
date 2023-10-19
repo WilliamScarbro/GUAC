@@ -6,11 +6,7 @@ import os
 from avocado.utils import archive, build, process
 from avocado import Test
 
-class CompareResult(Util.GuacTest):
-
-    def test_compare_result(self):
-        self._guac_handler(self._test_compare_result)
-        
+class _CompareResult:
     def _test_compare_result(self):
         """
         :param EXEC: executable
@@ -65,3 +61,10 @@ class CompareResult(Util.GuacTest):
             self.fail(f"Your_Result does not match Master_Result")
 
         
+
+class CompareResult(Util.GuacTest,_CompareResult):
+
+    def test_compare_result(self):
+        self._guac_handler(self._test_compare_result)
+        
+    
