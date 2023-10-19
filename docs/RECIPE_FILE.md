@@ -46,7 +46,7 @@ TaskList:
       Name: Collect
       Source: Collect.py
       Config: data/full_collect.yaml
-	  Depends: SetUp
+      Depends: SetUp
 	  
   - Task:
       Name: Compare
@@ -54,5 +54,5 @@ TaskList:
       Config:
         - data/full_collect.yaml
         - data/compare_result.yaml
-	  Depends: Collect
+     Depends: Collect
 ```
