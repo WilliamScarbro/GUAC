@@ -119,7 +119,13 @@ class PythonRunner(Runner):
         #self.version=test.get_param
 
     def command(self):
-        return f"python3 {self.executable} {self.args}"
+        run=f"python3 {self.executable}"
+        if isinstance(self.args,list):
+            for arg in self.args:
+                run+=" "+arg
+        else:
+            run+=" "self.args    
+        return run
     
 # abstract
 class PARRunner(Runner):
