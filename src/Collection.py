@@ -122,7 +122,7 @@ class PythonRunner(Runner):
         run=f"python3 {self.executable}"
         if isinstance(self.args,list):
             for arg in self.args:
-                run+=" "+arg
+                run+=f' "{arg}"'
         else:
             run+=" "+self.args    
         return run
