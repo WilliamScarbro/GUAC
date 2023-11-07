@@ -74,6 +74,13 @@ def parse_arguments():
     add_recipe(grade_parser)
     add_verbose(grade_parser)
     
+    # summerize
+    summerize_parser=subparsers.add_parser("summerize",help="summerizes grade resutls over these")
+    summerize_parser.set_defaults(func=summerize)
+    add_these(summerize_parser)
+    add_recipe(summerize_parser)
+    #add_verbose(summerize_parser)
+
     # inspect
     inspect_parser=subparsers.add_parser("inspect",help="inspects file from student's submission")
     inspect_parser.set_defaults(func=inspect)
@@ -239,6 +246,31 @@ def _grade(home,name,recipe_file):
     
     return grade_result
 
+def summerize(args):
+    check_for_server()
+
+    recipe_file=args.recipe
+    #verbose=int(args.verbose)
+    these = parse_students_yaml(args.these)
+
+    grade_results=[]
+    for stdID in these:
+        grade_results.append(_grade(GuacConfig().home,stdID,recipe_file))
+
+    grade_dist = [Score.fromString(gr.grade).score for gr in grade_results]
+
+    grade_set = sorted(list(set(grade_dist)))
+
+    grade_hist = { grade : sum([1 if gd==grade else 0 for gd in grade_dist]) for grade in grade_set }
+
+    average = sum(grade_dist) / len(grade_dist)
+    
+    for grade in grade_hist:
+        print(f"{grade} | {grade_hist[grade]}")
+
+    print(f"Average {average}")
+
+    
 # --name
 # --file
 def inspect(args):
