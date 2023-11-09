@@ -255,6 +255,8 @@ def summerize(args):
 
     grade_results=[]
     for stdID in these:
+        # does not catch error when student does not exist
+        # (all students should have been graded on recipe)
         grade_results.append(_grade(GuacConfig().home,stdID,recipe_file))
 
     grade_dist = [Score.fromString(gr.grade).score for gr in grade_results]
@@ -411,8 +413,13 @@ def export(args):
             try:
                 grade_result=_grade(home,student,recipe)
                 score=Score.fromString(grade_result.grade).score
+                #print(student,grade_result.sub_status)
+                if grade_result.sub_status == "BeforeTime":
+                    score = score+int(os.environ["PREBONUS"]) if score != 0 else score
+
                 if grade_result.sub_status == "Late":
-                    score-=late_penalty
+                    score=max(score-late_penalty,0)
+
                 if grade_result.sub_status == "Missing": # in case the grade weights allow "free" points
                     score=0
                 std_scores.append((student,score))

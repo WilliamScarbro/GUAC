@@ -204,9 +204,23 @@ def file_location(sub_home,assignment,student,file_type):
     else:
         # get latest file
         cur_file = files[-1]
-        
-    status = "Late" if "LATE" in os.path.basename(cur_file) else "OnTime"
 
+    
+    # specify a deadline other than checkin's
+    if "DEADLINE" in os.environ:
+        #print("Checking deadline")
+        deadline = float(os.environ["DEADLINE"]) # expects epoch
+        mtime = os.stat(cur_file).st_mtime
+        status = "Late" if mtime > deadline else "OnTime"
+    else:
+        status = "Late" if "LATE" in os.path.basename(cur_file) else "OnTime"
+
+    # remove later
+    if "PREDEADLINE" in os.environ:
+        predeadline = float(os.environ["PREDEADLINE"])
+        mtime = os.stat(cur_file).st_mtime
+        status = "BeforeTime" if mtime < predeadline else status
+        
     return str(cur_file),status
 
 def get_score_file(home,recipe_file,name):
