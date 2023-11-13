@@ -17,7 +17,8 @@ grn | guac run --name \$NAME --recipe \$RECIPE
 grt | guac run --these \$THESE --recipe \$RECIPE
 ggrade | guac grade --name \$NAME --recipe \$RECIPE
 gsum | guac summerize --these \$THESE --recipe \$RECIPE
-gu | guac update --name \$NAME --recipe \$RECIPE
+guscore | guac update score --name \$NAME --recipe \$RECIPE
+gustatus | guac update status --name \$NAME --recipe \$RECIPE
 gins | guac inspect --name \$NAME --recipe \$RECIPE
 gext | guac extract --these \$THESE --recipe \$RECIPE
 gexp | guac export --these \$THESE --recipe \$RECIPE
@@ -36,11 +37,11 @@ function mgexit {
 	unset -f gini
 	unset -f ggen
 	unset -f grn
-	unset -f grn
 	unset -f grt
 	unset -f ggrade
 	unset -f gsum
-	unset -f gu
+	unset -f guscore
+	unset -f gustatus
 	unset -f gins
 	unset -f gext
 	unset -f gexp
@@ -86,10 +87,16 @@ function gsum {
 	_miniguac_run_command "$comm"
 }
 
-function gu {
-	comm="guac update --name $NAME --recipe $RECIPE $@"
+function guscore {
+	comm="guac update score --name $NAME --recipe $RECIPE $@"
 	_miniguac_run_command "$comm"
 }
+
+function gustatus {
+	comm="guac update status --name $NAME --recipe $RECIPE $@"
+	_miniguac_run_command "$comm"
+}
+
 
 function gins {
 	comm="guac inspect --name $NAME --recipe $RECIPE $@"
