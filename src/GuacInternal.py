@@ -142,6 +142,8 @@ def list_tests_internal(to_execute,run_config):
     
 
 class GradeResults:
+    sub_status_set = {"OnTime","LATE","BeforeTime"}
+
     # Score, {}, Bool
     def __init__(self,assignment,grade,task_scores,task_results,sub_status,messages):
         self.assignment=assignment
@@ -151,6 +153,12 @@ class GradeResults:
         self.sub_status=sub_status # "OnTime","Late","Missing"
         self.messages=messages
     
+    def update_status(self,status):
+        if not status in GradeResults.sub_status_set:
+            raise Exception(f"Error: invalid status: '{status}' not in GradeResult.sub_status_set")
+        self.sub_status=status
+
+
     def dump(self,verbose=0):
         if verbose==0:
             res=f"Grade: {self.grade}"

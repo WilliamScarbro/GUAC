@@ -96,14 +96,26 @@ def parse_arguments():
     extract_parser.add_argument("--dest",metavar="destination_dir",required=False,help="name of directory to extract files")
     
     # update
-    update_parser=subparsers.add_parser("update",help="updates student's score for specific recipe and task")
-    update_parser.set_defaults(func=update)
-    add_name(update_parser)
-    add_recipe(update_parser)
-    add_force(update_parser)
-    update_parser.add_argument("--task",metavar="task_name",required=True,help="task name")
-    update_parser.add_argument("--score",metavar="score",type=int,required=True,help="new score")
+    update_parser=subparsers.add_parser("update",help="updates student's grade, either score or status")
+    update_subparser=update_parser.add_subparsers()
+
+    # update score
+    update_score_parser=update_subparser.add_parser("score",help="updates scores")
+    update_score_parser.set_defaults(func=update_score)
+    add_name(update_score_parser)
+    add_recipe(update_score_parser)
+    add_force(update_score_parser)
+    update_score_parser.add_argument("--task",metavar="task_name",required=True,help="task name")
+    update_score_parser.add_argument("--score",metavar="score",type=int,required=True,help="new score")
     
+    # update status
+    update_status_parser=update_subparser.add_parser("status",help="updates student's submission status")
+    update_status_parser.set_defaults(func=update_status)
+    add_name(update_status_parser)
+    add_recipe(update_status_parser)
+    add_force(update_status_parser)
+    update_status_parser.add_argument("--status",metavar="status",required=True,help="new status")
+
     # export
     export_parser=subparsers.add_parser("export",help="exports grades in CSV format")
     export_parser.set_defaults(func=export)
@@ -331,7 +343,7 @@ def extract(args):
 # --task
 # --score
 # --force
-def update(args):
+def update_score(args):
     check_for_server()
     
     name=args.name
@@ -388,7 +400,33 @@ def update(args):
     grade_result.add_message(message)
 
     write_output(score_file,grade_result.dump(verbose=2))
-    
+
+# --recipe
+# --name 
+# --status
+# --force
+def update_status(args):
+    check_for_server()
+
+    recipe_file=args.recipe
+    name=args.name
+    status=args.status
+    force=args.force
+
+    guac_config=GuacConfig()
+
+    # error if missing score file
+    score_file=get_score_file(guac_config.home,recipe_file,name)
+
+    grade_result=GradeResults.from_data(read_yaml_file(score_file))
+
+    # error if not legal status
+    grade_result.update_status(status)
+
+    confirm("update status",force)
+
+    write_output(score_file,grade_result.dump(verbose=2))
+
 # --recipe
 # --these
 # --target
