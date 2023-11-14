@@ -157,6 +157,9 @@ def run(args):
         print(f"YAML file: {args.these}")
         to_run=parse_students_yaml(args.these)
      
+    # check users
+    _ = [check_user_exists(name) for name in to_run]
+
     #print(f"grading: {to_run}")
     for student in to_run:
         grade_result = run_student(student,recipe_file,guac_config,weights,to_execute,verbose=args.verbose)
@@ -243,7 +246,7 @@ def init(args):
 def grade(args):
     check_for_server()
     
-    name=args.name
+    name=check_user_exists(args.name)
     recipe_file=args.recipe
     verbose=int(args.verbose)
     grade_result=_grade(GuacConfig().home,name,recipe_file)
@@ -263,7 +266,7 @@ def summerize(args):
 
     recipe_file=args.recipe
     #verbose=int(args.verbose)
-    these = parse_students_yaml(args.these)
+    these = [check_student_exists(name) for name in parse_students_yaml(args.these)]
 
     grade_results=[]
     for stdID in these:
@@ -290,7 +293,7 @@ def summerize(args):
 def inspect(args):
     check_for_server()
     
-    name=args.name
+    name=check_user_exists(args.name)
     file_name=args.file
 
     
@@ -313,7 +316,7 @@ def extract(args):
     force=args.force
     guac_config=GuacConfig()
     dest = args.dest if args.dest else os.path.join(guac_config.home,"bin")
-    these = parse_students_yaml(args.these)
+    these = [check_student_exists(name) for name in parse_students_yaml(args.these)]
     
     file_split=os.path.basename(file_name).split('.')
     file_stripped=file_split[0]
@@ -346,7 +349,7 @@ def extract(args):
 def update_score(args):
     check_for_server()
     
-    name=args.name
+    name=check_user_exists(args.name)
     recipe_file=args.recipe
     task=args.task.replace(' ','_')
     score=args.score
@@ -409,7 +412,7 @@ def update_status(args):
     check_for_server()
 
     recipe_file=args.recipe
-    name=args.name
+    name=check_user_exists(args.name)
     status=args.status
     force=args.force
 
@@ -435,7 +438,7 @@ def update_status(args):
 def export(args):
     check_for_server()
     
-    these=parse_students_yaml(args.these)
+    these=[check_student_exists(name) for name in parse_students_yaml(args.these)]
     recipe=args.recipe
     target=args.target
     force=args.force

@@ -284,3 +284,13 @@ def confirm(action,force):
             exit()
         print("Please enter 'Y' or 'N'")
 
+def check_user_exists(username):
+    try:
+        # Run the 'id' command with the specified username
+        subprocess.check_output(['id', username], stderr=subprocess.STDOUT, text=True)
+        return username  # User exists
+    except subprocess.CalledProcessError as e:
+        # If the 'id' command returns a non-zero exit code, the user does not exist
+        raise Exception(f"Name '{username}' does not exist on system")
+
+
