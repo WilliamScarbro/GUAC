@@ -266,7 +266,7 @@ def summerize(args):
 
     recipe_file=args.recipe
     #verbose=int(args.verbose)
-    these = [check_student_exists(name) for name in parse_students_yaml(args.these)]
+    these = [check_user_exists(name) for name in parse_students_yaml(args.these)]
 
     grade_results=[]
     for stdID in these:
@@ -316,7 +316,7 @@ def extract(args):
     force=args.force
     guac_config=GuacConfig()
     dest = args.dest if args.dest else os.path.join(guac_config.home,"bin")
-    these = [check_student_exists(name) for name in parse_students_yaml(args.these)]
+    these = [check_user_exists(name) for name in parse_students_yaml(args.these)]
     
     file_split=os.path.basename(file_name).split('.')
     file_stripped=file_split[0]
@@ -438,7 +438,7 @@ def update_status(args):
 def export(args):
     check_for_server()
     
-    these=[check_student_exists(name) for name in parse_students_yaml(args.these)]
+    these=[check_user_exists(name) for name in parse_students_yaml(args.these)]
     recipe=args.recipe
     target=args.target
     force=args.force
