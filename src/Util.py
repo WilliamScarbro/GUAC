@@ -115,7 +115,7 @@ import subprocess
 
 # Avocado has its own default timeout per task (120s)
 # timeout here is just in case
-def run_command(cwd, cmd, env=None, timeout=1000):
+def run_command(cwd, cmd, env=None, timeout=100):
     try:
         # Execute the command
         process = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,cwd=cwd)
@@ -291,6 +291,6 @@ def check_user_exists(username):
         return username  # User exists
     except subprocess.CalledProcessError as e:
         # If the 'id' command returns a non-zero exit code, the user does not exist
-        raise Exception(f"Name '{username}' does not exist on system")
+        raise Exception(f"User '{username}' does not exist on system")
 
 
