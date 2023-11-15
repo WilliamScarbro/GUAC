@@ -190,7 +190,7 @@ def file_location(sub_home,assignment,student,file_type):
     files = sorted(Path(std_dir).iterdir(), key=os.path.getmtime)
 
     if not files:
-        return None, "Missing" #raise Exception(f"No submission found for {student}") 
+        return None, "Missing", None #raise Exception(f"No submission found for {student}") 
 
     if "FILE_NAME" in os.environ:
         file_name = os.environ['FILE_NAME']
@@ -221,7 +221,7 @@ def file_location(sub_home,assignment,student,file_type):
         mtime = os.stat(cur_file).st_mtime
         status = "BeforeTime" if mtime < predeadline else status
         
-    return str(cur_file),status
+    return str(cur_file),status,os.stat(cur_file).st_mtime
 
 def get_score_file(home,recipe_file,name):
     recipe_name=os.path.basename(recipe_file).split('.')[0]
@@ -285,6 +285,8 @@ def confirm(action,force):
         print("Please enter 'Y' or 'N'")
 
 def check_user_exists(username):
+    # short circuit
+    return username
     try:
         # Run the 'id' command with the specified username
         subprocess.check_output(['id', username], stderr=subprocess.STDOUT, text=True)

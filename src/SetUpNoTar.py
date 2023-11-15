@@ -113,7 +113,7 @@ class SetUpNoTar(Util.GuacTest):
         student=self._safe_param("STUDENT")
         file_type=self._safe_param("FILE_TYPE")
 
-        file_loc,status = Util.file_location(sub_home,assignment,student,file_type)
+        file_loc,status,_ = Util.file_location(sub_home,assignment,student,file_type)
 
         if status=="Missing" or file_loc==None: # should be true at the same time
             self.fail("Missing submission")

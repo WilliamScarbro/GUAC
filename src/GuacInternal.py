@@ -141,36 +141,52 @@ def list_tests_internal(to_execute,run_config):
         print(result.name)
     
 
+class Submission:
+    def __init__(self,sub_name,time,status):
+        self.sub_name=sub_name
+        self.time=time
+        self.status=status
+    def to_dict(self):
+        return {"Name":self.sub_name,
+                "Time":self.time,
+                "Status":self.status}
+    def from_dict(dic):
+        sub_name=safe_get_var(dic,"Name")
+        time=safe_get_var(dic,"Time")
+        status=safe_get_var(dic,"Status")
+        return Submission(sub_name,time,status)
+    
 class GradeResults:
     sub_status_set = {"OnTime","LATE","BeforeTime"}
 
     # Score, {}, Bool
-    def __init__(self,assignment,grade,task_scores,task_results,sub_status,messages):
+    def __init__(self,assignment,grade,task_scores,task_results,submission,messages):
         self.assignment=assignment
         self.grade=grade
         self.task_scores=task_scores
         self.task_results=task_results # results of individual tests
-        self.sub_status=sub_status # "OnTime","Late","Missing"
+        self.submission=submission # "OnTime","Late","Missing"
         self.messages=messages
     
     def update_status(self,status):
         if not status in GradeResults.sub_status_set:
-            raise Exception(f"Error: invalid status: '{status}' not in GradeResult.sub_status_set")
-        self.sub_status=status
+            raise Exception(f"Error: invalid status: '{status}' not in {GradeResult.sub_status_set}")
+        self.submission.status=status
 
 
     def dump(self,verbose=0):
         if verbose==0:
             res=f"Grade: {self.grade}"
-            if self.sub_status=="Late" or self.sub_status=="Missing":
-                res+=f" # ({self.sub_status})" 
+            if self.submission.status!="OnTime":
+                res+=f" # ({self.submission.status})" 
             return res
 
         summery={}
         summery["Grade"]=str(self.grade)
         summery["Task_Scores"]=self.task_scores
 
-        summery["Submission_Status"]=self.sub_status
+        summery["Submission"]=self.submission.to_dict()
+        #summery["Submission_Status"]=self.sub_status
 
         if not self.messages is None:
             summery["Messages"]=self.messages
@@ -193,10 +209,11 @@ class GradeResults:
         grade=safe_get_var(data,"Grade")
         task_scores=safe_get_var(data,"Task_Scores")
         assignment=safe_get_var(data,"Assignment")
-        sub_status=safe_get_var(data,"Submission_Status")
+        #sub_status=safe_get_var(data,"Submission_Status")
+        submission=Submission.from_dict(safe_get_var(data,"Submission"))
         task_results=safe_get_var(data,"Task_Results")
         messages=data["Messages"] if "Messages" in data else None
-        return GradeResults(assignment,grade,task_scores,task_results,sub_status,messages)
+        return GradeResults(assignment,grade,task_scores,task_results,submission,messages)
 
     @staticmethod
     def get_task_scores(task_results):
@@ -322,12 +339,13 @@ def run_tasks(recipe_file,weights,to_execute,run_config,verbose=0):
     sub_home = run_config.guac_config.sub_home
     student = run_config.student
     
-    _,late=file_location(sub_home,assignment,student,"tar")
-                        
+    name,status,time=file_location(sub_home,assignment,student,"tar")
+    submission = Submission(os.path.basename(name),time,status)
+    
     task_scores=GradeResults.get_task_scores(task_results)
     grade=GradeResults.get_grade(task_scores)
     
-    grade_results=GradeResults(assignment,grade,task_scores,task_results,late,None)
+    grade_results=GradeResults(assignment,grade,task_scores,task_results,submission,None)
 
     write_output(os.path.join(student_dir,f"{student}.grade"),grade_results.dump(verbose=2))
 
