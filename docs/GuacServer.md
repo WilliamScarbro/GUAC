@@ -17,5 +17,10 @@ Grading server for guac.
 ### Details
 * GuacServer locks the assignment directory to all guac actions while running (by creating a .server file)
   * This avoids overwriting local data while server is running
-  * Therefor, it is recommended to have a separate development and production directories
+  * Therefore, it is recommended to have a separate development and production directories
 
+### Use
+* Copy contents of assignment directory into new directory
+* Change guac.yaml -> HOME to path of new directory
+* Run server from new directory .e.g
+``` guac server --recipe RECIPE ```
