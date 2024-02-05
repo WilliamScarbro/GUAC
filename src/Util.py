@@ -181,7 +181,7 @@ def file_location(sub_home,assignment,student,file_type):
 
     std_dir=os.path.join(os.path.join(sub_home,assignment),student)
     if not os.path.isdir(std_dir):
-        return None,"Missing"
+        return None,"Missing",None
     
     #on_time=os.path.join(std_dir,assignment+"."+file_type)
     #late=os.path.join(std_dir,f"LATE_{assignment}.{file_type}")
