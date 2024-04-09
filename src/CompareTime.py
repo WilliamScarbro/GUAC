@@ -48,6 +48,6 @@ class CompareTime(Util.GuacTest):
         self._write_whiteboard_yaml({"Maximum_Time":float(maximum)})
 
         if student_time>maximum:
-            self._write_whiteboard_yaml({"Your_Time":student})
+            self._write_whiteboard_yaml({"Your_Time":float(student_time)})
             self.fail(f"Your_Time > Maximum_Time")
         
